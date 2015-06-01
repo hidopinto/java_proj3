@@ -31,6 +31,7 @@ public class Properties implements Serializable{
 	 */
 	public Properties()
 	{
+		super();
 		this.numOfThreads = 1;
 		this.searchAlgorithm = new Astar(new MazeManhattanDistance());
 		this.generateAlgorithm = new MazeGeneratorDFS();
@@ -43,7 +44,7 @@ public class Properties implements Serializable{
 	 * @param generateAlgorithm - a generateAlgorithm.
 	 */
 	public Properties(int numOfThreads, CommonSearcher searchAlgorithm,MazeGenerator generateAlgorithm) {
-		super();
+		this();
 		this.numOfThreads = numOfThreads;
 		this.searchAlgorithm = searchAlgorithm;
 		this.generateAlgorithm = generateAlgorithm;

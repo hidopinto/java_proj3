@@ -13,7 +13,7 @@ import java.util.Observable;
  * @see Observable
  * @see View
  */
-public class MyView extends Observable implements View {
+public class MyView extends CommonView {
 	
 	HashMap<String, presenter.Presenter.Command> commands;
 

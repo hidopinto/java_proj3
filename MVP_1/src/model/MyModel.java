@@ -47,10 +47,6 @@ public class MyModel extends Observable implements Model {
 	Searcher searcher = new Astar(new MazeAirDistance());
 	MazeGenerator mazeGenerator = new MazeGeneratorDFS();
 	
-	/* needs to create two local object to save memory :
-	  1 : SessionFactory - only one to the all class.
-	  2 : Session - not necessary but saves memory(but uses more CPU) to use the same session in the constructor and in the stop() method.
-	 */
 	
 	/**
 	 * MyModel constructor. Reads the data from the DataBase and puts it in the HashMap.

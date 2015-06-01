@@ -20,12 +20,12 @@ public class RunnabelCLI implements Runnable{
 	PrintWriter out;
 	//UserCommands userCommands;
 	//String lastCommand;
-	MyView v;
+	CommonView v;
 	/**
 	 * general getters and setters
-	 * @return v - a MyView.
+	 * @return v - a CommonView.
 	 */
-	public MyView getV() {
+	public CommonView getV() {
 		return v;
 	}
 	/**
