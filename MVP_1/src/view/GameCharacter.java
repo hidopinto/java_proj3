@@ -13,6 +13,6 @@ public class GameCharacter {
 	public void paint(PaintEvent e,int w,int h){
 		e.gc.setForeground(new Color(null,255,0,0));
 		e.gc.setBackground(new Color(null,255,0,0));
-		e.gc.fillOval(x,y, w, h);
+		e.gc.fillOval(x,y, (int) (w*0.6), (int) (h*0.6));
 	}
 }

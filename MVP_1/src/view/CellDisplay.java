@@ -22,7 +22,6 @@ public class CellDisplay extends Canvas{
 			@Override
 			public void paintControl(PaintEvent e) {
 				ImageData data = i.getImageData();
-				
 				e.gc.drawImage(i, 0, 0,data.width,data.height,0,0,getSize().x,getSize().y);
 			}
 		});
@@ -31,7 +30,8 @@ public class CellDisplay extends Canvas{
 
 	public void setI(Image i) {
 		this.i = i;
-		redraw();
+		System.out.println("setting I");
+		//redraw();
 	}
 	
 }

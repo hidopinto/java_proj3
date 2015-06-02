@@ -3,16 +3,14 @@
  */
 package view;
 
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.internal.C;
 import org.eclipse.swt.widgets.Composite;
 
 import algorithms.mazeGenerators.Cell;
@@ -26,8 +24,8 @@ public class MazeDisplay extends Composite {
 	
 	Maze mazeData;
 	
-	Timer timer;
-	TimerTask myTask;
+	imgDisplay[][] maze =null;
+	Image[][] images = null;
 	GameCharacter gameCharecter;
 	int h;
 	int w;
@@ -35,118 +33,99 @@ public class MazeDisplay extends Composite {
 	
 	public MazeDisplay(Composite parent,int style, Maze m){
         super(parent, style);
-        
-        mazeData = m;
-        
-        //setBackground(new Color(null, 255, 255, 255));
-        gameCharecter = new GameCharacter(0, 0);//change to (0,0)
-        
+        mazeData = m;        
+        gameCharecter = new GameCharacter(0, 0);
         displayMaze();
         
-	}
-	
-	public void displayMaze(){
-		
-		final CellDisplay[][] maze = new CellDisplay[mazeData.getRows()][mazeData.getCols()];
-        for(int i = 0;i<mazeData.getRows();i++)
-        	for(int j=0;j<mazeData.getCols();j++)
-        	{
-        		Image im = chooseImage(mazeData.getCell(i, j));
-        		maze[i][j] = new CellDisplay(this, SWT.FILL, im);
-        		maze[i][j].setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,1,1));
-        	}
-
         addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
-				
-				//e.gc.setForeground(new Color(null,0,0,0));
-				   //e.gc.setBackground(new Color(null,0,0,0));
+				if(maze != null) {
 				   int width=getSize().x;
 				   int height=getSize().y;
 
 				   w=width/mazeData.getCols();
 				   h=height/mazeData.getRows();
-
-				   for(int i=0;i<mazeData.getRows();i++)
-				      for(int j=0;j<mazeData.getCols();j++){
-				          //int x=j*w;
-				          //int y=i*h;
+				   
+				   if(gameCharecter.x == 0 && gameCharecter.y == 0)
+					   gameCharecter = new GameCharacter((int)(w*0.2), (int)(h*0.2
+							   ));
+				   
+				   for(int i=0;i<mazeData.getCols();i++){
+				      for(int j=0;j<mazeData.getRows();j++){
 				          if(mazeData.getCell(i, j)!=null){
-				        		Image im = chooseImage(mazeData.getCell(i, j));
-				        		maze[i][j].setI(im);
+				        	  	/*if(images[i][j]==null){
+				        	  		images[i][j] = chooseImage(mazeData.getCell(i, j),i,j);
+				        	  		maze[i][j].setI(images[i][j]);
+				        	  	}*/
+				        		maze[j][i].paint(e, i*w, j*h, w, h); //for some reason it flips the rows with the cols so this fixes it.
 				          }				              
-				        	  
-				        	  //e.gc.fillRectangle(x,y,w,h);
-				          	  //e.gc.drawOval(x, y, w, h);
-				        	  //e.gc.drawRectangle(x, y, w, h);
-				          	
+				       
 				      }
-				   //gameCharecter.x = 3*w;
-				   //gameCharecter.y = 5*h;
+				   }
 				   gameCharecter.paint(e, w, h);
-
+				}
 					
 				
 				
 			}
 		});
-		
 	}
 	
-	public void start(){ // change it so the arrow keys would move the character.
-						 // use KeyListener
-		myTask = new TimerTask() {
-			
-			@Override
-			public void run() {
-			
-			      getDisplay().syncExec(new Runnable() {
-
-			    		@Override
-			    		public void run() {
-			    		   Random r=new Random();
-			    		   gameCharecter.x = r.nextInt(100);
-							gameCharecter.y = r.nextInt(100);
-			    		   redraw();
-			    		}
-			    	 });
-
-				
-				/*Random r = new Random();
-				gameCharecter.x = r.nextInt(100);
-				gameCharecter.y = r.nextInt(100);
-				redraw();*/
-				
-			}
-		};
-		timer = new Timer();
-		timer.scheduleAtFixedRate(myTask, 0, 500);
+	public void displayMaze(){
+		
+		if(maze==null){
+			images = new Image[mazeData.getCols()][mazeData.getRows()];
+			maze = new imgDisplay[mazeData.getCols()][mazeData.getRows()];
+        	for(int i = 0;i<mazeData.getCols();i++)
+        		for(int j=0;j<mazeData.getRows();j++)
+        		{
+        			Image im = chooseImage(mazeData.getCell(i, j),i,j);
+        			maze[i][j] = new imgDisplay(im);
+        		}
+		}
+		
+		this.update();
+        this.redraw();
 	}
+	
+	
 	
 	public void stop(){
-		myTask.cancel();
-		timer.cancel();
+		//TODO
 	}
 	
-	final public Image chooseImage(Cell cell){
-		Image i = null;
+	final public Image chooseImage(Cell cell,int i,int j){
+		Image im = null;
+		
+		String image_path = "squares/square";
+		if(cell.getHasRightWall())
+			image_path+="_right";
 		
 		if(cell.getHasBottomWall())
-			i = new Image(getDisplay(), new ImageData("images/cell.jpg"));
+			image_path+="_bottom";
 		
-		if(cell.getHasLeftWall())
-			i = new Image(getDisplay(), new ImageData("images/cell.jpg"));
+		if(cell.getHasLeftWall() && (j == 0))//for some reason it flips the rows with the cols so this fixes it.
+			image_path+="_left";
 		
-		if(cell.getHasRightWall())
-			i = new Image(getDisplay(), new ImageData("images/cell.jpg"));
+		if(cell.getHasTopWall() && (i == 0))//for some reason it flips the rows with the cols so this fixes it.
+			image_path+="_top";
 		
-		if(cell.getHasTopWall())
-			i = new Image(getDisplay(), new ImageData("images/cell.jpg"));
-		//needs to check if cell is in the borders 
-		//sets the right image for the cell
+		image_path+=".jpg";
 		
-		return i;
+		im = new Image(getDisplay(), new ImageData(image_path));
+		
+		return im;
+	}
+
+	public Maze getMazeData() {
+		return mazeData;
+	}
+
+	public void setMazeData(Maze mazeData) {
+		this.mazeData = mazeData;
+		this.update();
+		this.redraw();
 	}
 
 }
