@@ -69,7 +69,7 @@ public class Run {
 		cli.start();*/
 		
 		MazeGeneratorDFS mg = new MazeGeneratorDFS();
-		Maze m = new Maze(3,3);
+		Maze m = new Maze(8,8);
 		mg.generateMaze(m, 0, 0);
 		MazeWindow mw = new MazeWindow("maze", 600, 600, m);
 		mw.run();

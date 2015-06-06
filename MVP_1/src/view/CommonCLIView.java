@@ -8,7 +8,7 @@ import java.util.Observable;
  * @see View
  * @see Observable
  */
-public abstract class CommonView extends Observable implements View{
+public abstract class CommonCLIView extends Observable implements View{
 
 	/**
 	 * just like Observable.setChanged, but public.

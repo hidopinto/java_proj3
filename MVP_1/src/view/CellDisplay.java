@@ -12,26 +12,31 @@ import algorithms.mazeGenerators.Cell;
 
 public class CellDisplay extends Canvas{
 
-	Image i;
+	Image image = null;
+	GameCharacter gc = null;
 	
-	public CellDisplay(Composite parent, int style, Image i) {
+	public CellDisplay(Composite parent, int style) {
 		super(parent, style);
-        this.i=i;
         addPaintListener(new PaintListener() {
 			
 			@Override
 			public void paintControl(PaintEvent e) {
-				ImageData data = i.getImageData();
-				e.gc.drawImage(i, 0, 0,data.width,data.height,0,0,getSize().x,getSize().y);
-			}
+				if(image!=null){		
+					System.out.println("PRINT CELL STUB");
+					e.gc.drawImage(image, 0, 0,image.getImageData().width,image.getImageData().height,0,0,getSize().x,getSize().y);
+				}
+				if(gc!=null)
+					gc.paint(e, (int) (getSize().x * 0.8), (int) (getSize().y * 0.8));
+				}
 		});
 
 	}
 
 	public void setI(Image i) {
-		this.i = i;
-		System.out.println("setting I");
-		//redraw();
+		this.image = i;
 	}
-	
+
+	public void setGc(GameCharacter gc) {
+		this.gc = gc;
+	}
 }
