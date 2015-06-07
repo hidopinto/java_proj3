@@ -40,9 +40,11 @@ public class MazeDisplay extends Composite {
 
 	
 	public MazeDisplay(Composite parent,int style, Maze m){
-        super(parent, style);
+        super(parent, style | SWT.DOUBLE_BUFFERED);
         mazeData = m;        
         gameCharecter = new GameCharacter(0,0);
+        h = 1;
+        w = 1;
         displayMaze();
         
         addPaintListener(new PaintListener() {
@@ -51,25 +53,20 @@ public class MazeDisplay extends Composite {
 				   int width=getSize().x;
 				   int height=getSize().y;
 
+				   int x = (int)(gameCharecter.x / w);
+				   int y = (int)(gameCharecter.y / h);
+				   
 				   w=width/mazeData.getCols();
 				   h=height/mazeData.getRows();
 				   
-				   if(gameCharecter.x == 0 && gameCharecter.y == 0){
-					   gameCharecter.x = (int)(w*0.2);
-					   gameCharecter.y = (int)(h*0.2);
-				   }
+				   x *= w;
+				   y *= h;
 				   
-				   int gcI = gameCharecter.x/w;
-				   int gcJ = gameCharecter.y/h;
-					for(int i=0;i<mazeData.getRows();i++){
+				   gameCharecter.x = x + (int)(w*0.2);
+				   gameCharecter.y = y + (int)(h*0.2);
+				   
+				   for(int i=0;i<mazeData.getRows();i++){
 						for(int j=0;j<mazeData.getCols();j++){
-							/*if(gcI == i && gcJ==j){
-								maze[i][j].setGc(gameCharecter);
-								maze[i][j].redraw();
-							}else{
-								maze[i][j].redraw();
-								maze[i][j].setGc(null);	
-							}*/
 							maze[j][i].paint(e, i*w, j*h, w, h); //for some reason it flips the rows with the cols so this fixes it.
 						}
 				   	}//draws the maze
@@ -90,22 +87,11 @@ public class MazeDisplay extends Composite {
 		if(maze==null){
 			   if(images==null){
 					images = new Image[mazeData.getRows()][mazeData.getCols()];
-					//maze = new CellDisplay[mazeData.getRows()][mazeData.getCols()];
 					maze = new imgDisplay[mazeData.getRows()][mazeData.getCols()];
 			   }
 			   
 				   for(int i=0;i<mazeData.getRows();i++){
 					   for(int j=0;j<mazeData.getCols();j++){
-							   /*if(images[i][j]==null){
-			        	  			images[i][j] = chooseImage(mazeData.getCell(i, j),i,j);
-			        	  			maze[i][j].setI(images[i][j]);
-			        	  		}*/
-						   		//maze[j][i].paint(e, i*w, j*h, w, h); //for some reason it flips the rows with the cols so this fixes it.				              
-						   /*if(maze[i][j] == null){
-						   		Image im = chooseImage(mazeData.getCell(i, j),i,j);
-						   		maze[i][j] = new CellDisplay(this, SWT.FILL);
-						   		maze[i][j].setI(im);
-						   }*/
 						   if(maze[i][j] == null){
 			        			Image im = chooseImage(mazeData.getCell(i, j),i,j);
 			        			maze[i][j] = new imgDisplay(im);
@@ -114,22 +100,7 @@ public class MazeDisplay extends Composite {
 				   }
 		   }//setting up the maze
 		this.getShell().layout();
-		
-		/*if(maze==null){
-			images = new Image[mazeData.getCols()][mazeData.getRows()];
-			//maze = new imgDisplay[mazeData.getCols()][mazeData.getRows()];
-        	maze = new CellDisplay[mazeData.getCols()][mazeData.getRows()];
-			for(int i = 0;i<mazeData.getCols();i++)
-        		for(int j=0;j<mazeData.getRows();j++)
-        		{
-        			Image im = chooseImage(mazeData.getCell(i, j),i,j);
-        			//maze[i][j] = new imgDisplay(im);
-        			maze[i][j] = new CellDisplay(this, SWT.NONE, im);
-        		}
 		}
-		
-		this.update();*/
-	}
 	
 	
 	
@@ -167,7 +138,6 @@ public class MazeDisplay extends Composite {
 	public void setMazeData(Maze mazeData) {
 		this.mazeData = mazeData;
 		this.images = null;
-		//displayMaze();
 	}
 
 }
