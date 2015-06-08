@@ -1,4 +1,4 @@
-package view;
+package GUI;
 
 import java.util.HashMap;
 
@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import presenter.Presenter.Command;
+import view.View;
 import algorithms.mazeGenerators.Cell;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
@@ -23,7 +24,8 @@ import algorithms.search.Solution;
 public class MazeWindow extends BasicWindow implements View{//implements View
 
 	Maze myMaze;
-	MazeDisplay maze;
+	CommonGameBoard maze;
+	CommonMazeDisplayer md;
 	
 	public MazeWindow(String title, int width, int height, Maze m) {
 		super(title, width, height);
@@ -36,8 +38,10 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 	@Override
 	void initWidgets() {
 		shell.setLayout(new GridLayout(1, false));
+		md = new ImgMazeDisplayer(myMaze, null);
+		maze=new ImgGameBoard(shell, SWT.FILL, myMaze, md);
+		md.setBoard(maze);
 		
-		maze=new MazeDisplay(shell, SWT.FILL, this.myMaze);
 		maze.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,1,1));
 		
 		maze.addListener (SWT.Resize,  new Listener () {
@@ -53,7 +57,7 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 			public void keyReleased(KeyEvent e) {
 				int i = maze.gameCharecter.x/maze.w;
 				int j= maze.gameCharecter.y/maze.h;
-				Cell cell = maze.mazeData.getCell(j,i);//for some reason it flips the rows with the cols so this fixes it.
+				Cell cell = md.mazeData.getCell(j,i);//for some reason it flips the rows with the cols so this fixes it.
 				GC gc = new GC(maze, SWT.FILL);
 				switch( e.keyCode ) {
 				case SWT.ARROW_LEFT:
@@ -61,7 +65,7 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 					if((cell.getHasLeftWall() == false) && !((i ==0)&&(j==0))){
 						
 						maze.gameCharecter.x -=maze.w;
-						maze.maze[j][i].paint(gc, i*maze.w, j*maze.h, maze.w, maze.h);
+						md.maze[j][i].paint(gc, i*maze.w, j*maze.h, maze.w, maze.h);
 						maze.gameCharecter.paint(gc, maze.w, maze.h);
 					}
 		            break;
@@ -69,7 +73,7 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 		            // handle up
 		        	if((cell.getHasTopWall() == false)){
 						maze.gameCharecter.y -=maze.h;
-						maze.maze[j][i].paint(gc, i*maze.w, j*maze.h, maze.w, maze.h);
+						md.maze[j][i].paint(gc, i*maze.w, j*maze.h, maze.w, maze.h);
 						maze.gameCharecter.paint(gc, maze.w, maze.h);					
 						}
 		            break;
@@ -77,7 +81,7 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 		            // handle right
 					if((cell.getHasRightWall() == false) && !(j==(maze.mazeData.getCols()-1) && (i==(maze.mazeData.getRows()-1)) )){
 						maze.gameCharecter.x +=maze.w;
-						maze.maze[j][i].paint(gc, i*maze.w, j*maze.h, maze.w, maze.h);
+						md.maze[j][i].paint(gc, i*maze.w, j*maze.h, maze.w, maze.h);
 						maze.gameCharecter.paint(gc, maze.w, maze.h);		
 						}
 					if(j==(maze.mazeData.getCols()-1) && (i==(maze.mazeData.getRows()-1)) ){
@@ -88,7 +92,7 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 		            // handle down
 					if((cell.getHasBottomWall() == false)){
 						maze.gameCharecter.y +=maze.h;
-						maze.maze[j][i].paint(gc, i*maze.w, j*maze.h, maze.w, maze.h);
+						md.maze[j][i].paint(gc, i*maze.w, j*maze.h, maze.w, maze.h);
 						maze.gameCharecter.paint(gc, maze.w, maze.h);					
 						}
 					break;
@@ -132,7 +136,7 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 
 	@Override
 	public void displaySolution(Solution s) {
-		// TODO Auto-generated method stub
+		//Solution sol= myMaze
 		
 	}
 

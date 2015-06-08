@@ -10,12 +10,14 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-import org.hibernate.Query;
+/*import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.tool.hbm2ddl.SchemaExport;*/
 
+
+import GUI.MazeWindow;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.MazeGeneratorDFS;
 import algorithms.search.BFS;
@@ -23,7 +25,6 @@ import model.MazeData;
 import model.MyModel;
 import presenter.Presenter;
 import presenter.Properties;
-import view.MazeWindow;
 import view.MyView;
 import view.RunnabelCLI;
 

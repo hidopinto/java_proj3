@@ -1,4 +1,4 @@
-package view;
+package GUI;
 
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Color;

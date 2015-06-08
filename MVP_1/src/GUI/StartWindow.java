@@ -1,4 +1,4 @@
-package view;
+package GUI;
 
 public class StartWindow extends BasicWindow{
 
