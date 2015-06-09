@@ -3,9 +3,6 @@ package view;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-
-import algorithms.mazeGenerators.Maze;
 
 /**
  * a class made by object adapter, forming a runnable CLI class, for using threads.

@@ -15,7 +15,6 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import algorithms.mazeGenerators.Maze;
 import view.MyView;
 import view.View;
-import model.MazeData;
 import model.MazeNames;
 import model.Model;
 import model.MyModel;

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Event;
@@ -58,7 +57,6 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 				int i = maze.gameCharecter.x/maze.w;
 				int j= maze.gameCharecter.y/maze.h;
 				Cell cell = myMaze.getCell(j,i);//for some reason it flips the rows with the cols so this fixes it.
-				GC gc = new GC(maze, SWT.FILL);
 				switch( e.keyCode ) {
 				case SWT.ARROW_LEFT:
 		            // handle left

@@ -22,7 +22,6 @@ import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.MazeGenerator;
 import algorithms.mazeGenerators.MazeGeneratorDFS;
 import algorithms.search.Astar;
-import algorithms.search.MazeAirDistance;
 import algorithms.search.MazeManhattanDistance;
 import algorithms.search.Searcher;
 import algorithms.search.Solution;
@@ -44,7 +43,7 @@ public class MyModel extends Observable implements Model {
 	ExecutorService executor = Executors.newCachedThreadPool();
 	HashMap<String, Solution> hm = new  HashMap<String, Solution>(); // String represents the Maze using toString function. using String instead of Maze, it will be easier to use HashMap
 	HashMap<String,String> mazesNames = new HashMap<String, String>(); //the other HashMap for saving maze's names. The first String describes a maze;
-	Searcher searcher = new Astar(new MazeAirDistance());
+	Searcher searcher = new Astar(new MazeManhattanDistance());
 	MazeGenerator mazeGenerator = new MazeGeneratorDFS();
 	
 	

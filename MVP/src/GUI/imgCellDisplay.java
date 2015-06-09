@@ -1,16 +1,14 @@
-package view;
+package GUI;
 
 import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 
-public class imgDisplay {
+public class imgCellDisplay {
 
 	Image image;
 	
-	public imgDisplay(Image img) {
+	public imgCellDisplay(Image img) {
 		this.image = img;
 	}
 	public void paint(PaintEvent e,int start,int end,int w,int h){ 

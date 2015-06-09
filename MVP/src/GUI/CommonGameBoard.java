@@ -3,7 +3,6 @@ package GUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import algorithms.mazeGenerators.Maze;
 
 public abstract class CommonGameBoard extends Composite implements GameBoard {
 

@@ -2,21 +2,18 @@ package GUI;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 
-import view.imgDisplay;
 import algorithms.mazeGenerators.Cell;
 import algorithms.mazeGenerators.Maze;
 
 public class ImgMazeDisplayer extends CommonMazeDisplayer {
 	
 	Image[][] images = null;
-	imgDisplay[][] maze =null;
+	imgCellDisplay[][] maze =null;
 	Maze mazeData;
 	
 	public ImgMazeDisplayer(Maze mazeData,  CommonGameBoard board) {
@@ -38,14 +35,14 @@ public class ImgMazeDisplayer extends CommonMazeDisplayer {
 		if(maze==null){
 			   if(images==null){
 					images = new Image[mazeData.getRows()][mazeData.getCols()];
-					maze = new imgDisplay[mazeData.getRows()][mazeData.getCols()];
+					maze = new imgCellDisplay[mazeData.getRows()][mazeData.getCols()];
 			   }
 			   
 				   for(int i=0;i<mazeData.getRows();i++){
 					   for(int j=0;j<mazeData.getCols();j++){
 						   if(maze[i][j] == null){
 			        			Image im = chooseImage(mazeData.getCell(i, j),i,j);
-			        			maze[i][j] = new imgDisplay(im);
+			        			maze[i][j] = new imgCellDisplay(im);
 			        		}
 					   }
 				   }
