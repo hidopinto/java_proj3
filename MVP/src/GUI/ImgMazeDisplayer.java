@@ -16,6 +16,8 @@ import algorithms.mazeGenerators.Maze;
 public class ImgMazeDisplayer extends CommonMazeDisplayer {
 	
 	Image[][] images = null;
+	imgDisplay[][] maze =null;
+	Maze mazeData;
 	
 	public ImgMazeDisplayer(Maze mazeData,  CommonGameBoard board) {
 		super();

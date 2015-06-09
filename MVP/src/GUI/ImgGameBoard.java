@@ -27,11 +27,12 @@ import algorithms.mazeGenerators.Maze;
  *
  */
 public class ImgGameBoard extends CommonGameBoard {
-
+	Maze mazeData;
 	
-	public ImgGameBoard(Composite parent,int style, Maze m, MazeDisplayer md){
-        super(parent, style | SWT.DOUBLE_BUFFERED, m);
+	public ImgGameBoard(Composite parent,int style, MazeDisplayer md,Maze mazeData){
+        super(parent, style | SWT.DOUBLE_BUFFERED);
         this.md = md;
+        this.mazeData = mazeData;
         gameCharecter = new GameCharacter(0,0);
         h = 1;
         w = 1;

@@ -39,7 +39,7 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 	void initWidgets() {
 		shell.setLayout(new GridLayout(1, false));
 		md = new ImgMazeDisplayer(myMaze, null);
-		maze=new ImgGameBoard(shell, SWT.FILL, myMaze, md);
+		maze=new ImgGameBoard(shell, SWT.FILL, md, myMaze);
 		md.setBoard(maze);
 		
 		maze.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,1,1));
@@ -57,7 +57,7 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 			public void keyReleased(KeyEvent e) {
 				int i = maze.gameCharecter.x/maze.w;
 				int j= maze.gameCharecter.y/maze.h;
-				Cell cell = md.mazeData.getCell(j,i);//for some reason it flips the rows with the cols so this fixes it.
+				Cell cell = myMaze.getCell(j,i);//for some reason it flips the rows with the cols so this fixes it.
 				GC gc = new GC(maze, SWT.FILL);
 				switch( e.keyCode ) {
 				case SWT.ARROW_LEFT:
@@ -65,26 +65,23 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 					if((cell.getHasLeftWall() == false) && !((i ==0)&&(j==0))){
 						
 						maze.gameCharecter.x -=maze.w;
-						md.maze[j][i].paint(gc, i*maze.w, j*maze.h, maze.w, maze.h);
-						maze.gameCharecter.paint(gc, maze.w, maze.h);
+						maze.redraw();
 					}
 		            break;
 		        case SWT.ARROW_UP:
 		            // handle up
 		        	if((cell.getHasTopWall() == false)){
 						maze.gameCharecter.y -=maze.h;
-						md.maze[j][i].paint(gc, i*maze.w, j*maze.h, maze.w, maze.h);
-						maze.gameCharecter.paint(gc, maze.w, maze.h);					
+						maze.redraw();					
 						}
 		            break;
 		        case SWT.ARROW_RIGHT:
 		            // handle right
-					if((cell.getHasRightWall() == false) && !(j==(maze.mazeData.getCols()-1) && (i==(maze.mazeData.getRows()-1)) )){
+					if((cell.getHasRightWall() == false) && !(j==(myMaze.getCols()-1) && (i==(myMaze.getRows()-1)) )){
 						maze.gameCharecter.x +=maze.w;
-						md.maze[j][i].paint(gc, i*maze.w, j*maze.h, maze.w, maze.h);
-						maze.gameCharecter.paint(gc, maze.w, maze.h);		
+						maze.redraw();		
 						}
-					if(j==(maze.mazeData.getCols()-1) && (i==(maze.mazeData.getRows()-1)) ){
+					if(j==(myMaze.getCols()-1) && (i==(myMaze.getRows()-1)) ){
 						//finish line - play music, show a win window, etc.
 					}
 		            break;
@@ -92,8 +89,7 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 		            // handle down
 					if((cell.getHasBottomWall() == false)){
 						maze.gameCharecter.y +=maze.h;
-						md.maze[j][i].paint(gc, i*maze.w, j*maze.h, maze.w, maze.h);
-						maze.gameCharecter.paint(gc, maze.w, maze.h);					
+						maze.redraw();					
 						}
 					break;
 		        case SWT.ESC:

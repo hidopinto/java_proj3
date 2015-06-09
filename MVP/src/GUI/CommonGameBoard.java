@@ -11,11 +11,10 @@ public abstract class CommonGameBoard extends Composite implements GameBoard {
 	int h;
 	int w;
 	GameCharacter gameCharecter;
-	Maze mazeData;
 	
-	public CommonGameBoard(Composite parent, int style,Maze mazeData) {
+	
+	public CommonGameBoard(Composite parent, int style) {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
-		this.mazeData = mazeData;
 	}
 
 	public void setMD(MazeDisplayer md){
