@@ -7,5 +7,5 @@ import algorithms.search.Solution;
 
 public interface MazeDisplayer {
 	void draw(PaintEvent e);
-	void drawSol(GC gc, Solution sol);
+	void drawSol(PaintEvent e, Solution sol);
 }

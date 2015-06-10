@@ -4,6 +4,8 @@
 package GUI;
 
 
+import java.util.Iterator;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -22,7 +24,7 @@ public class ImgGameBoard extends CommonGameBoard {
         super(parent, style | SWT.DOUBLE_BUFFERED);
         this.md = md;
         this.mazeData = mazeData;
-        gameCharecter = new GameCharacter(0,0);
+        gameCharecters.add( new ImgGameCharacter(0,0,null) );
         h = 1;
         w = 1;
         
@@ -31,26 +33,37 @@ public class ImgGameBoard extends CommonGameBoard {
 			public void paintControl(PaintEvent e) {
 				   int width=getSize().x;
 				   int height=getSize().y;
-
-				   int x = (int)(gameCharecter.x / w);
-				   int y = (int)(gameCharecter.y / h);
 				   
-				   if(ImgGameBoard.this.md == null)
-					   return;
+				   int Last_w = w;
+				   int Last_h = h;
 				   
 				   w=width/mazeData.getCols();
 				   h=height/mazeData.getRows();
 				   
-				   x *= w;
-				   y *= h;
+				   Iterator<GameCharacter> ite = gameCharecters.iterator();
 				   
-				   gameCharecter.x = x + (int)(w*0.2);
-				   gameCharecter.y = y + (int)(h*0.2);
+				   while(ite.hasNext()){
+					   GameCharacter gc = ite.next();
+					   int x = (int) (gc.x / Last_w);
+					   int y = (int) (gc.y / Last_h);
+					   
+					   x *= w;
+					   y *= h;
+					   
+					   gameCharecters.get(0).x = x + (int)(w*0.2);
+					   gameCharecters.get(0).y = y + (int)(h*0.2);
+				   }//sets the characters to be in the center of the cell, even if the cell's sizes have been changed.
+				   
 				   if(md==null)
 					  return;
 				   md.draw(e);//draws the maze
 				   
-				gameCharecter.paint(e, w, h);
+				   ite=gameCharecters.iterator();
+				   
+				   while(ite.hasNext()){
+					   GameCharacter gc = ite.next();
+					   gc.paint(e, w, h);
+				   }//draws all of the characters
 			}
 		});
 	}

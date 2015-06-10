@@ -85,7 +85,7 @@ public class ImgMazeDisplayer extends CommonMazeDisplayer {
 	}
 
 	@Override
-	public void drawSol(GC gc, Solution sol) {
+	public void drawSol(PaintEvent e, Solution sol) {
 		String[] solMaze = sol.toString().split(System.lineSeparator());
 		String[] CellPoint = null;
 		
@@ -95,7 +95,7 @@ public class ImgMazeDisplayer extends CommonMazeDisplayer {
 			int y = new Integer(CellPoint[0].split(",")[1]);
 			Image im = chooseImage(mazeData.getCell(x, y), x, y, true);
 			maze[x][y].setI(im);
-			maze[x][y].paint(gc, x*board.w, y*board.h, board.w, board.h); //for some reason it flips the rows with the cols so this fixes it.
+			maze[x][y].paint(e, x*board.w, y*board.h, board.w, board.h); //for some reason it flips the rows with the cols so this fixes it.
 		}
 							
 	}
