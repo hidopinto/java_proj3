@@ -5,8 +5,11 @@ import java.util.HashMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -38,6 +41,7 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 	void initWidgets() {
 		shell.setLayout(new GridLayout(1, false));
 		md = new ImgMazeDisplayer(myMaze, null);
+		
 		maze=new ImgGameBoard(shell, SWT.FILL, md, myMaze);
 		md.setBoard(maze);
 		
@@ -120,12 +124,8 @@ public class MazeWindow extends BasicWindow implements View{//implements View
 
 	@Override
 	public void displayMaze(Maze m) {
-		if(m!= this.myMaze){
-			this.myMaze = m;
-			//needs to set maze 
-			
-		}
-		
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package GUI;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
@@ -9,6 +10,7 @@ import org.eclipse.swt.layout.GridLayout;
 
 import algorithms.mazeGenerators.Cell;
 import algorithms.mazeGenerators.Maze;
+import algorithms.search.Solution;
 
 public class ImgMazeDisplayer extends CommonMazeDisplayer {
 	
@@ -41,7 +43,7 @@ public class ImgMazeDisplayer extends CommonMazeDisplayer {
 				   for(int i=0;i<mazeData.getRows();i++){
 					   for(int j=0;j<mazeData.getCols();j++){
 						   if(maze[i][j] == null){
-			        			Image im = chooseImage(mazeData.getCell(i, j),i,j);
+			        			Image im = chooseImage(mazeData.getCell(i, j),i,j,false);
 			        			maze[i][j] = new imgCellDisplay(im);
 			        		}
 					   }
@@ -56,7 +58,7 @@ public class ImgMazeDisplayer extends CommonMazeDisplayer {
 	   	}//paints the window
 	}
 
-	public Image chooseImage(Cell cell,int i,int j){
+	public Image chooseImage(Cell cell,int i,int j, boolean sol){
 		Image im = null;
 		
 		String image_path = "squares/square";
@@ -72,10 +74,29 @@ public class ImgMazeDisplayer extends CommonMazeDisplayer {
 		if(cell.getHasTopWall() && (i == 0))//for some reason it flips the rows with the cols so this fixes it.
 			image_path+="_top";
 		
+		if(sol==true)
+			image_path+="_sol";
+		
 		image_path+=".jpg";
 		
 		im = new Image(board.getDisplay(), new ImageData(image_path));
 		
 		return im;
+	}
+
+	@Override
+	public void drawSol(GC gc, Solution sol) {
+		String[] solMaze = sol.toString().split(System.lineSeparator());
+		String[] CellPoint = null;
+		
+		for(String line : solMaze){
+			CellPoint = line.split(" ");
+			int x = new Integer(CellPoint[0].split(",")[0]);
+			int y = new Integer(CellPoint[0].split(",")[1]);
+			Image im = chooseImage(mazeData.getCell(x, y), x, y, true);
+			maze[x][y].setI(im);
+			maze[x][y].paint(gc, x*board.w, y*board.h, board.w, board.h); //for some reason it flips the rows with the cols so this fixes it.
+		}
+							
 	}
 }
