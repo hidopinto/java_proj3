@@ -69,10 +69,20 @@ public class Run {
 		RunnabelCLI cli=new RunnabelCLI(reader, writer,v);
 		cli.start();*/
 		
+		/*int w='w';
+		int a='a';
+		int s='s';
+		int d='d';
+		System.out.println("w = " + w);
+		System.out.println("a = " + a);
+		System.out.println("s = " + s);
+		System.out.println("d = " + d);
+		*/
 		MazeGeneratorDFS mg = new MazeGeneratorDFS();
 		Maze m = new Maze(8,8);
 		mg.generateMaze(m, 0, 0);
-		MazeWindow mw = new MazeWindow("maze", 600, 600, m);
+		MazeWindow mw = new MazeWindow("maze", 600, 600);
+		mw.setMaze(m.toString());
 		mw.run();
 	}
 

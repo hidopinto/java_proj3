@@ -1,6 +1,7 @@
 package GUI;
 
 import java.util.LinkedList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
@@ -35,4 +36,7 @@ public abstract class CommonGameBoard extends Composite implements GameBoard {
 		this.gameCharecters.remove(gameCharecter);
 	}
 	
+	public void SetMD(MazeDisplayer MD){
+		this.md = MD;
+	}
 }

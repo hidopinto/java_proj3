@@ -50,12 +50,13 @@ public class ImgGameBoard extends CommonGameBoard {
 					   x *= w;
 					   y *= h;
 					   
-					   gameCharecters.get(0).x = x + (int)(w*0.2);
-					   gameCharecters.get(0).y = y + (int)(h*0.2);
+					   gc.x = x + (int)(w*0.2);
+					   gc.y = y + (int)(h*0.2);
 				   }//sets the characters to be in the center of the cell, even if the cell's sizes have been changed.
 				   
 				   if(md==null)
 					  return;
+				   
 				   md.draw(e);//draws the maze
 				   
 				   ite=gameCharecters.iterator();
@@ -75,5 +76,6 @@ public class ImgGameBoard extends CommonGameBoard {
 	public void stop(){
 		//TODO
 	}
+	
 
 }

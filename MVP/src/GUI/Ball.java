@@ -15,25 +15,21 @@ public class Ball {
 	char dir;
 	int x;
 	int y;
-	int w;
-	int h;
 	Timer timer;
 	TimerTask myTask;
 	Composite widget;
 	Image image;
 	
-	public Ball(char dir,int X,int Y,int W,int H,Composite widget,TimerTask task) {
+	public Ball(char dir,int X,int Y,Composite widget,TimerTask task) {
 		
 		this.x=X;
 		this.y=Y;
-		this.w=W;
-		this.h=H;
 		this.widget=widget;
 		this.myTask = task;
 		this.dir=dir;
 		
 		timer = new Timer();
-		timer.scheduleAtFixedRate(myTask, 0, 1);
+		timer.scheduleAtFixedRate(myTask, 0, 20);
 	}
 	
 	public void stop(){
@@ -41,7 +37,7 @@ public class Ball {
 		timer.cancel();
 	}
 
-	public void paint(GC  gc){
+	public void paint(GC  gc,int w,int h){
 		if(image ==null)
 			image = new Image(gc.getDevice(), "animations/ball.png");
 		widget.redraw();

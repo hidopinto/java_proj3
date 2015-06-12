@@ -34,7 +34,7 @@ public class ImgMazeDisplayer extends CommonMazeDisplayer {
 		board.layout();
 		board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,mazeData.getRows(),mazeData.getCols() ));
 		
-		if(maze==null){
+		if(maze==null){//or maze have been changed
 			   if(images==null){
 					images = new Image[mazeData.getRows()][mazeData.getCols()];
 					maze = new imgCellDisplay[mazeData.getRows()][mazeData.getCols()];
@@ -99,4 +99,5 @@ public class ImgMazeDisplayer extends CommonMazeDisplayer {
 		}
 							
 	}
+	
 }

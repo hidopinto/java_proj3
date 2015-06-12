@@ -7,5 +7,5 @@ public abstract class CommonMazeDisplayer implements MazeDisplayer {
 	public void setBoard(CommonGameBoard board) {
 		this.board = board;
 	}
-	
+		
 }

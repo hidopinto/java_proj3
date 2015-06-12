@@ -11,7 +11,7 @@ public class imgCellDisplay {
 	public imgCellDisplay(Image img) {
 		this.image = img;
 	}
-	public void paint(PaintEvent e,int start,int end,int w,int h){ 
+	public void paint(PaintEvent e,int start,int end,int w,int h){
 		e.gc.drawImage(image, 0, 0,image.getImageData().width,image.getImageData().height,start,end,w,h);
 	}
 	public void paint(GC gc,int start,int end,int w,int h){ 
@@ -21,4 +21,5 @@ public class imgCellDisplay {
 	public void setI(Image i) {
 		this.image = i;
 	}
+	
 }
