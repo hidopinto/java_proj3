@@ -24,7 +24,9 @@ public class ImgGameBoard extends CommonGameBoard {
         super(parent, style | SWT.DOUBLE_BUFFERED);
         this.md = md;
         this.mazeData = mazeData;
-        gameCharecters.add( new ImgGameCharacter(0,0,null) );
+        
+        gameCharecters.add(new ImgGameCharacter(0,0,((mazeData.getRows()-1)) , ((mazeData.getCols()-1)),null));
+        
         h = 1;
         w = 1;
         

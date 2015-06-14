@@ -2,7 +2,6 @@ package GUI;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
@@ -51,8 +50,8 @@ public class ImgMazeDisplayer extends CommonMazeDisplayer {
 		   }//setting up the maze
 		board.getShell().layout();
 		
-		for(int i=0;i<mazeData.getRows();i++){
-			for(int j=0;j<mazeData.getCols();j++){
+		for(int i=0;i<mazeData.getCols();i++){
+			for(int j=0;j<mazeData.getRows();j++){
 				maze[j][i].paint(e, i*board.w, j*board.h, board.w, board.h); //for some reason it flips the rows with the cols so this fixes it.
 			}
 	   	}//paints the window
@@ -94,6 +93,22 @@ public class ImgMazeDisplayer extends CommonMazeDisplayer {
 			int x = new Integer(CellPoint[0].split(",")[0]);
 			int y = new Integer(CellPoint[0].split(",")[1]);
 			Image im = chooseImage(mazeData.getCell(x, y), x, y, true);
+			maze[x][y].setI(im);
+			maze[x][y].paint(e, x*board.w, y*board.h, board.w, board.h); //for some reason it flips the rows with the cols so this fixes it.
+		}
+							
+	}
+	
+	@Override
+	public void undrawSol(PaintEvent e, Solution sol) {
+		String[] solMaze = sol.toString().split(System.lineSeparator());
+		String[] CellPoint = null;
+		
+		for(String line : solMaze){
+			CellPoint = line.split(" ");
+			int x = new Integer(CellPoint[0].split(",")[0]);
+			int y = new Integer(CellPoint[0].split(",")[1]);
+			Image im = chooseImage(mazeData.getCell(x, y), x, y, false);
 			maze[x][y].setI(im);
 			maze[x][y].paint(e, x*board.w, y*board.h, board.w, board.h); //for some reason it flips the rows with the cols so this fixes it.
 		}

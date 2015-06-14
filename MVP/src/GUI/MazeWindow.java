@@ -1,25 +1,26 @@
 package GUI;
 
+import jaco.mp3.player.MP3Player;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.TimerTask;
-
-import model.MazeData;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.internal.win32.MSG;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.MessageBox;
 
 import presenter.Presenter.Command;
 import view.View;
@@ -34,10 +35,9 @@ import algorithms.search.Solution;
 public class MazeWindow extends BasicWindow implements View{
 
 	Maze myMaze;
-	CommonGameBoard maze;
+	CommonGameBoard board;
 	CommonMazeDisplayer md;
-	char LastPressed = 's';
-	char player2_LastPressed = 's';
+	
 	
 	public MazeWindow(String title, int width, int height) {
 		super(title, width, height);
@@ -59,30 +59,23 @@ public class MazeWindow extends BasicWindow implements View{
 		
 		md = new ImgMazeDisplayer(myMaze, null);
 		
-		maze=new ImgGameBoard(shell, SWT.BORDER, md, myMaze);
-		md.setBoard(maze);
+		board=new ImgGameBoard(shell, SWT.BORDER, md, myMaze);
+		md.setBoard(board);
 		
-		maze.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,1,2));
+		board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,1,2));
 		
-		maze.addListener (SWT.Resize,  new Listener () {
-		    @Override
-			public void handleEvent(Event arg0) {
-		    	maze.redraw();
-		    }
-		    });
-		
-		maze.addKeyListener(new KeyListener() { //allows the user move the character with the arrows.
-			
+		board.addKeyListener(new KeyListener() { //allows the user move the character with the arrows.
+	
 			@Override
 			public void keyReleased(KeyEvent e) {
-				int i1 = maze.gameCharecters.get(0).x/maze.w;
-				int j1= maze.gameCharecters.get(0).y/maze.h;
+				int i1 = board.gameCharecters.get(0).x/board.w;
+				int j1= board.gameCharecters.get(0).y/board.h;
 				int i2 = -1;
 				int j2 = -1;
 				Cell cell2 =null;
-				if(maze.gameCharecters.size()==2){
-					i2 = maze.gameCharecters.get(1).x/maze.w;
-					j2= maze.gameCharecters.get(1).y/maze.h;
+				if(board.gameCharecters.size()==2){
+					i2 = board.gameCharecters.get(1).x/board.w;
+					j2= board.gameCharecters.get(1).y/board.h;
 					cell2 = myMaze.getCell(j2,i2);//for some reason it flips the rows with the cols so this fixes it.
 				}
 				
@@ -92,36 +85,37 @@ public class MazeWindow extends BasicWindow implements View{
 		            // player1 handle left
 					if((cell1.getHasLeftWall() == false) && !((i1 ==0)&&(j1==0))){
 						
-						maze.gameCharecters.get(0).x -=maze.w;
-						maze.redraw();
-						LastPressed='l';
+						board.gameCharecters.get(0).x -=board.w;
+						board.redraw();
+						board.gameCharecters.get(0).Last_direction='l';
+						checkWinSituation(0);
 					}
 		            break;
 		        case SWT.ARROW_UP:
 		            // player1 handle up
 		        	if((cell1.getHasTopWall() == false)){
-						maze.gameCharecters.get(0).y -=maze.h;
-						maze.redraw();
-						LastPressed='u';
+		        		board.gameCharecters.get(0).y -=board.h;
+		        		board.redraw();
+		        		board.gameCharecters.get(0).Last_direction='u';
+						checkWinSituation(0);
 						}
 		            break;
 		        case SWT.ARROW_RIGHT:
 		            // player1 handle right
 					if((cell1.getHasRightWall() == false) && !(j1==(myMaze.getCols()-1) && (i1==(myMaze.getRows()-1)) )){
-						maze.gameCharecters.get(0).x +=maze.w;
-						maze.redraw();	
-						LastPressed='r';
+						board.gameCharecters.get(0).x +=board.w;
+						board.redraw();	
+						board.gameCharecters.get(0).Last_direction='r';
+						checkWinSituation(0);
 						}
-					if(j1==(myMaze.getCols()-1) && (i1==(myMaze.getRows()-1)) ){
-						//finish line - play music, show a win window, etc.
-					}
 		            break;
 		        case SWT.ARROW_DOWN:
 		            // player1 handle down
 					if((cell1.getHasBottomWall() == false)){
-						maze.gameCharecters.get(0).y +=maze.h;
-						maze.redraw();	
-						LastPressed='d';
+						board.gameCharecters.get(0).y +=board.h;
+						board.redraw();	
+						board.gameCharecters.get(0).Last_direction='d';
+						checkWinSituation(0);
 						}
 					break;
 		        case 97:
@@ -130,9 +124,10 @@ public class MazeWindow extends BasicWindow implements View{
 		        		return;
 					if((cell2.getHasLeftWall() == false) && !((i2 ==0)&&(j2==0))){
 						
-						maze.gameCharecters.get(1).x -=maze.w;
-						maze.redraw();
-						player2_LastPressed='l';
+						board.gameCharecters.get(1).x -=board.w;
+						board.redraw();
+						board.gameCharecters.get(1).Last_direction='l';
+						checkWinSituation(1);
 					}
 		            break;
 		        case 119:
@@ -140,9 +135,10 @@ public class MazeWindow extends BasicWindow implements View{
 		        	if(i2==-1)
 		        		return;
 		        	if((cell2.getHasTopWall() == false)){
-						maze.gameCharecters.get(1).y -=maze.h;
-						maze.redraw();
-						player2_LastPressed='u';
+		        		board.gameCharecters.get(1).y -=board.h;
+		        		board.redraw();
+		        		board.gameCharecters.get(1).Last_direction='u';
+						checkWinSituation(1);
 						}
 		            break;
 		        case 100:
@@ -150,277 +146,46 @@ public class MazeWindow extends BasicWindow implements View{
 		        	if(i2==-1)
 		        		return;
 					if((cell2.getHasRightWall() == false) && !(j2==(myMaze.getCols()-1) && (i2==(myMaze.getRows()-1)) )){
-						maze.gameCharecters.get(1).x +=maze.w;
-						maze.redraw();	
-						player2_LastPressed='r';
+						board.gameCharecters.get(1).x +=board.w;
+						board.redraw();	
+						board.gameCharecters.get(1).Last_direction='r';
+						checkWinSituation(1);
 						}
-					if(j2==(myMaze.getCols()-1) && (i2==(myMaze.getRows()-1)) ){
-						//finish line - play music, show a win window, etc.
-					}
-		            break;
+					break;
 		        case 115:
 		            // player2 handle down
 		        	if(i2==-1)
 		        		return;
 					if((cell2.getHasBottomWall() == false)){
-						maze.gameCharecters.get(1).y +=maze.h;
-						maze.redraw();	
-						player2_LastPressed='d';
+						board.gameCharecters.get(1).y +=board.h;
+						board.redraw();	
+						board.gameCharecters.get(1).Last_direction='d';
+						checkWinSituation(1);
 						}
 					break;
 		        case SWT.ESC:
 		            // handle esc
-		        	if(maze.gameCharecters.get(0).ball !=null){
-		        		maze.gameCharecters.get(0).ball.stop();
-						maze.gameCharecters.get(0).ball=null;
-		        	}
-		        	if((maze.gameCharecters.size()>1) && maze.gameCharecters.get(1).ball !=null){
-		        		maze.gameCharecters.get(1).ball.stop();
-						maze.gameCharecters.get(1).ball=null;
-		        	}
-					shell.dispose();
+		        	closeMe();
 					break;
 				
-		        case SWT.CTRL:
-		        	if(LastPressed == 's')
+		        case SWT.ALT:
+		        	if(board.gameCharecters.get(0).Last_direction == 's')
 		        		break;
-		        	if(maze.gameCharecters.get(0).ball != null)
+		        	if(board.gameCharecters.get(0).ball != null)
 		        		break;
 		        	
-		        	
-		        			        	
-		        	TimerTask player1_task = new TimerTask() {
-		    			
-		    			@Override
-		    			public void run() {
-		    				
-		    				  //maze.getDisplay().syncExec(new Runnable() {
-		    			      maze.getDisplay().syncExec(new Runnable() {
-
-		  			    		@Override
-		  			    		public void run() {
-		  			    			int i = maze.gameCharecters.get(0).ball.x/maze.w;
-		  							int j= maze.gameCharecters.get(0).ball.y/maze.h;
-		  							Cell cell1 = myMaze.getCell(j, i);//for some reason it flips the rows with the cols so this fixes it.
-		  			    			GC gc = new GC(maze, SWT.NONE);
-		  			    			
-		  			    			Iterator<GameCharacter> ite = maze.gameCharecters.iterator();
-		  						   
-		  						   while(ite.hasNext()){
-		  							   GameCharacter gameC = ite.next();
-		  							   if(gameC==maze.gameCharecters.get(0)){
-		  								   if(ite.hasNext())
-		  									   gameC=ite.next();
-		  								   else
-		  									   break;
-		  							   }
-		  								
-		  							   int x = (int) (gameC.x / maze.w);
-		  							   int y = (int) (gameC.y / maze.h);
-		  							
-		  							   if(i==x && j==y){
-		  								   
-		  								   if(gameC.ball !=null){
-		  									   	gameC.ball.stop();
-		  									   	gameC.ball=null;
-			  								}
-		  								   
-		  								   maze.removeGameCharecter(gameC);
-		  								   
-		  								   //closes the thread
-		  								   	maze.gameCharecters.get(0).ball.stop();
-		  									maze.gameCharecters.get(0).ball=null;
-		  									maze.redraw();
-		  									maze.getDisplay().disposeExec(this);
-		  								}
-		  							   
-		  							   if(maze.gameCharecters.size()==1) //this statement is here because we can be sure that if we got in this loop, there are more game character than 1.
-			  							   	return;
-		  							}
-		  						   
-		  			    			switch (maze.gameCharecters.get(0).ball.dir) {
-		  							case 'l':
-		  								// handle left
-		  								if((cell1.getHasLeftWall() == false) && !((i ==0)&&(j==0))){
-		  									maze.gameCharecters.get(0).ball.x -= (int) (maze.w);//*0.1
-		      								maze.gameCharecters.get(0).ball.paint(gc,maze.w, maze.h);
-		  								}
-		  								else{
-		  									maze.gameCharecters.get(0).ball.stop();
-		  									maze.gameCharecters.get(0).ball=null;
-		  									maze.redraw();
-		  									maze.getDisplay().disposeExec(this);
-		  								}
-	  									break;
-		  							case 'u':
-		  								// handle up
-		  					        	if((cell1.getHasTopWall() == false)){
-		  					        		maze.gameCharecters.get(0).ball.y -= (int) (maze.h);//*0.1
-		      								maze.gameCharecters.get(0).ball.paint(gc,maze.w, maze.h);
-		  								}
-		  								else{
-		  									maze.gameCharecters.get(0).ball.stop();
-		  									maze.gameCharecters.get(0).ball=null;
-		  									maze.redraw();
-		  									maze.getDisplay().disposeExec(this);
-		  								}
-		  								break;
-		  							case 'r':
-		  								// handle right
-		  								if((cell1.getHasRightWall() == false) && !(j==(myMaze.getCols()-1) && (i==(myMaze.getRows()-1)) )){
-		  									maze.gameCharecters.get(0).ball.x += (int) (maze.w);//*0.1
-		      								maze.gameCharecters.get(0).ball.paint(gc,maze.w, maze.h);
-		  								}
-		  								else{
-		  									maze.gameCharecters.get(0).ball.stop();
-		  									maze.gameCharecters.get(0).ball=null;
-		  									maze.redraw();
-		  									maze.getDisplay().disposeExec(this);
-		  								}
-		  								break;
-		  							case 'd':
-		  								// handle down
-		  								if((cell1.getHasBottomWall() == false)){
-		  									maze.gameCharecters.get(0).ball.y += (int) (maze.h);//*0.1
-		      								maze.gameCharecters.get(0).ball.paint(gc,maze.w, maze.h);
-		  								}
-		  								else{
-		  									maze.gameCharecters.get(0).ball.stop();
-		  									maze.gameCharecters.get(0).ball=null;
-		  									maze.redraw();
-		  									maze.getDisplay().disposeExec(this);
-		  								}
-		  								break;
-		  							}
-		  			    		}
-		  			    	 });
-		    				
-		    			}
-		    			
-		    		};
-		        	maze.gameCharecters.get(0).ball = new Ball(LastPressed,maze.gameCharecters.get(0).x, maze.gameCharecters.get(0).y, maze,player1_task);
+		        	characterShoot(0);
 		        	
 		        	break;
 		        case SWT.SPACE:
 		        	if(i2==-1)
 		        		return;
-		        	if(player2_LastPressed == 's')
+		        	if(board.gameCharecters.get(1).Last_direction == 's')
 		        		break;
-		        	if(maze.gameCharecters.get(1).ball != null)
+		        	if(board.gameCharecters.get(1).ball != null)
 		        		break;
 		        	
-		        	
-		        			        	
-		        	TimerTask player2_task = new TimerTask() {
-		    			
-		    			@Override
-		    			public void run() {
-		    				
-		    				  //maze.getDisplay().syncExec(new Runnable() {
-		    			      maze.getDisplay().syncExec(new Runnable() {
-
-		  			    		@Override
-		  			    		public void run() {
-		  			    			int i = maze.gameCharecters.get(1).ball.x/maze.w;
-		  							int j= maze.gameCharecters.get(1).ball.y/maze.h;
-		  							Cell cell1 = myMaze.getCell(j, i);//for some reason it flips the rows with the cols so this fixes it.
-		  			    			GC gc = new GC(maze, SWT.NONE);
-		  			    			
-		  			    			Iterator<GameCharacter> ite = maze.gameCharecters.iterator();
-			  						   
-			  						   while(ite.hasNext()){
-			  							   GameCharacter gameC = ite.next();
-			  							   if(gameC==maze.gameCharecters.get(1)){
-			  								   if(ite.hasNext())
-			  									   gameC=ite.next();
-			  								   else
-			  									   break;
-			  							   }
-			  								
-			  							   int x = (int) (gameC.x / maze.w);
-			  							   int y = (int) (gameC.y / maze.h);
-			  							
-			  							   if(i==x && j==y){
-			  								   
-			  								   if(gameC.ball !=null){
-			  									   	gameC.ball.stop();
-			  									   	gameC.ball=null;
-				  								}
-			  								   
-			  								   maze.removeGameCharecter(gameC);
-			  								   
-			  								   //closes the thread
-			  								   	maze.gameCharecters.get(0).ball.stop();
-			  									maze.gameCharecters.get(0).ball=null;
-			  									maze.redraw();
-			  									maze.getDisplay().disposeExec(this);
-			  								} //checks collision between this character's ball and other characters
-			  							   
-			  							   if(maze.gameCharecters.size()==1) //this statement is here because we can be sure that if we got in this loop, there are more game character than 1.
-				  							   	return;
-			  							}
-		  			    			
-		  			    			switch (maze.gameCharecters.get(1).ball.dir) {
-		  							case 'l':
-		  								// handle left
-		  								if((cell1.getHasLeftWall() == false) && !((i ==0)&&(j==0))){
-		  									maze.gameCharecters.get(1).ball.x -= (int) (maze.w);//*0.1
-		      								maze.gameCharecters.get(1).ball.paint(gc,maze.w, maze.h);
-		  								}
-		  								else{
-		  									maze.gameCharecters.get(1).ball.stop();
-		  									maze.gameCharecters.get(1).ball=null;
-		  									maze.redraw();
-		  									maze.getDisplay().disposeExec(this);
-		  								}
-	  									break;
-		  							case 'u':
-		  								// handle up
-		  					        	if((cell1.getHasTopWall() == false)){
-		  					        		maze.gameCharecters.get(1).ball.y -= (int) (maze.h);//*0.1
-		      								maze.gameCharecters.get(1).ball.paint(gc,maze.w, maze.h);
-		  								}
-		  								else{
-		  									maze.gameCharecters.get(1).ball.stop();
-		  									maze.gameCharecters.get(1).ball=null;
-		  									maze.redraw();
-		  									maze.getDisplay().disposeExec(this);
-		  								}
-		  								break;
-		  							case 'r':
-		  								// handle right
-		  								if((cell1.getHasRightWall() == false) && !(j==(myMaze.getCols()-1) && (i==(myMaze.getRows()-1)) )){
-		  									maze.gameCharecters.get(1).ball.x += (int) (maze.w);//*0.1
-		      								maze.gameCharecters.get(1).ball.paint(gc,maze.w, maze.h);
-		  								}
-		  								else{
-		  									maze.gameCharecters.get(1).ball.stop();
-		  									maze.gameCharecters.get(1).ball=null;
-		  									maze.redraw();
-		  									maze.getDisplay().disposeExec(this);
-		  								}
-		  								break;
-		  							case 'd':
-		  								// handle down
-		  								if((cell1.getHasBottomWall() == false)){
-		  									maze.gameCharecters.get(1).ball.y += (int) (maze.h);//*0.1
-		      								maze.gameCharecters.get(1).ball.paint(gc,maze.w, maze.h);
-		  								}
-		  								else{
-		  									maze.gameCharecters.get(1).ball.stop();
-		  									maze.gameCharecters.get(1).ball=null;
-		  									maze.redraw();
-		  									maze.getDisplay().disposeExec(this);
-		  								}
-		  								break;
-		  							}
-		  			    		}
-		  			    	 });
-		    				
-		    			}
-		    			
-		    		};
-		        	maze.gameCharecters.get(1).ball = new Ball(player2_LastPressed,maze.gameCharecters.get(1).x, maze.gameCharecters.get(1).y, maze,player2_task);
+		        	characterShoot(1);
 		        	
 		        	break;
 		     }
@@ -432,6 +197,195 @@ public class MazeWindow extends BasicWindow implements View{
 			}
 		});
 
+		board.addMouseListener(new MouseListener() {
+			
+			int mouseI=-1;
+			int mouseJ=-1;
+			GameCharacter gameC=null;
+			int gameC_index=0;
+			@Override
+			public void mouseUp(MouseEvent e) {
+				if(mouseI==-1)
+					return;
+				String dir="";
+				if((e.x/board.w)>mouseJ)
+					dir+='r';
+				if((e.x/board.w)<mouseJ)
+					dir+='l';
+				if((e.y/board.h)>mouseI)
+					dir+='d';
+				if((e.y/board.h)<mouseI)
+					dir+='u';
+				
+				if(dir=="")
+					return; //mouse didn't move so do nothing.
+				
+				Cell curCell = myMaze.getCell( mouseI , mouseJ );
+				Cell nextCell = null;
+				
+				switch(dir){
+				case("ru"):
+					if(!curCell.getHasRightWall() && !(mouseI==(myMaze.getRows()-1) && mouseJ==(myMaze.getCols()-1) )){
+						nextCell=myMaze.getCell(mouseI, mouseJ+1);
+						if(!nextCell.getHasTopWall()){
+							//move right & up
+							gameC.x +=board.w;
+							gameC.y -=board.h;
+							gameC.Last_direction='u';
+						}
+					}
+					if(!curCell.getHasTopWall()){
+						nextCell=myMaze.getCell(mouseI-1, mouseJ);
+						if(!nextCell.getHasRightWall() && !((mouseI-1)==(myMaze.getRows()-1) && mouseJ==(myMaze.getCols()-1) )){
+							//move up && right
+							gameC.x +=board.w;
+							gameC.y -=board.h;
+							gameC.Last_direction='r';
+						}
+						else
+							dir="u";
+					}
+					break;
+				case("rd"):
+					if(!curCell.getHasRightWall() && !(mouseI==(myMaze.getRows()-1) && mouseJ==(myMaze.getCols()-1) )){
+						nextCell=myMaze.getCell(mouseI, mouseJ+1);
+						if(!nextCell.getHasBottomWall()){
+							//move right & up
+							gameC.x +=board.w;
+							gameC.y +=board.h;
+							gameC.Last_direction='d';
+						}
+					}
+					if(!curCell.getHasBottomWall()){
+						nextCell=myMaze.getCell(mouseI+1, mouseJ);
+						if(!nextCell.getHasRightWall() && !((mouseI+1)==(myMaze.getRows()-1) && mouseJ==(myMaze.getCols()-1) )){
+							//move up && right
+							gameC.x +=board.w;
+							gameC.y +=board.h;
+							gameC.Last_direction='r';
+						}
+						else
+							dir="d";
+					}
+					break;
+				case("lu"):
+					if(!curCell.getHasLeftWall() && !(mouseI==0 && mouseJ==0)){
+						nextCell=myMaze.getCell(mouseI, mouseJ-1);
+						if(!nextCell.getHasTopWall()){
+							//move left & up
+							gameC.x -=board.w;
+							gameC.y -=board.h;
+							gameC.Last_direction='u';
+						}
+					}
+					if(!curCell.getHasTopWall()){
+						nextCell=myMaze.getCell(mouseI-1, mouseJ);
+						if(!nextCell.getHasLeftWall() && !((mouseI-1)==0 && mouseJ==0)){
+							//move up && left
+							gameC.x -=board.w;
+							gameC.y -=board.h;
+							gameC.Last_direction='l';
+						}
+						else
+							dir="u";
+					}
+					break;
+				case("ld"):
+					if(!curCell.getHasLeftWall() && !(mouseI==0 && mouseJ==0)){
+						nextCell=myMaze.getCell(mouseI, mouseJ-1);
+						if(!nextCell.getHasBottomWall()){
+							//move left & down
+							gameC.x -=board.w;
+							gameC.y +=board.h;
+							gameC.Last_direction='d';
+						}
+					}
+					if(!curCell.getHasBottomWall()){
+						nextCell=myMaze.getCell(mouseI+1, mouseJ);
+						if(!nextCell.getHasLeftWall() && !((mouseI+1)==0 && mouseJ==0)){
+							//move down && left
+							gameC.x -=board.w;
+							gameC.y +=board.h;
+							gameC.Last_direction='l';
+						}
+						else
+							dir="d";
+					}
+					break;
+				case("r"):
+					if(!curCell.getHasRightWall() && !(mouseI==(myMaze.getRows()-1) && mouseJ==(myMaze.getCols()-1) )){
+						//move right
+						gameC.x +=board.w;
+						gameC.Last_direction='r';
+					}
+					break;
+				case("l"):
+					if(!curCell.getHasLeftWall() && !(mouseI==0 && mouseJ==0)){
+						//move left
+						gameC.x -=board.w;
+						gameC.Last_direction='l';
+					}
+					break;
+				case("u"):
+					if(!curCell.getHasTopWall()){
+						//move up
+						gameC.y -=board.h;
+						gameC.Last_direction='u';
+					}
+					break;
+				case("d"):
+					if(!curCell.getHasBottomWall()){
+						//move down
+						gameC.y +=board.h;
+						gameC.Last_direction='d';
+					}
+					break;
+				}
+				
+				//check if a player got to his end position.
+				board.redraw();
+				checkWinSituation(gameC_index);
+				
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent e) {
+				gameC_index=0;
+				int characterI=-1,characterJ=-1; //there is no point at checking if there are 2 characters in the Tile, because they need to shoot each other from distance.
+				Iterator<GameCharacter> ite = board.gameCharecters.iterator();
+				
+				
+			    while(ite.hasNext()){
+				   gameC = ite.next();
+				   
+				   characterI = (int) (gameC.x / board.w);
+				   characterJ = (int) (gameC.y / board.h);
+				
+				   if(characterI==(e.x/board.w) && characterJ==(e.y/board.h))
+					   break;
+				   else
+					   gameC=null;
+				   gameC_index++;
+				}
+			   	if(gameC!=null){
+			   		mouseI = characterJ;
+					mouseJ = characterI;
+			   	}else
+			   	{
+			   		mouseI = -1;
+					mouseJ = -1;
+			   	}
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				MessageBox msg = new MessageBox(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+				msg.setText("Massage from the awesome programmer");
+				msg.setMessage("stop double clicking " + System.lineSeparator() + "it's worthless -.-");
+				msg.open();
+			}
+		});
+		
 		
 		Button mini_game = new Button(shell, SWT.PUSH);
 		mini_game.setText("play 1v1");
@@ -440,16 +394,41 @@ public class MazeWindow extends BasicWindow implements View{
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(maze==null)
+				if(board==null)
 					return;
 				
 				if(myMaze ==null)
 					return;
 				
-				if(maze.gameCharecters.size()<2){
-					GameCharacter gc2 = new ImgGameCharacter( ((myMaze.getCols()-1)*maze.w) , ((myMaze.getRows()-1))*maze.h , new Image(maze.getDisplay(), "characters/haim.png"));
-					maze.gameCharecters.add(gc2);
-					maze.redraw();
+				if(board.gameCharecters.size()<2){
+					GameCharacter gc2=null;
+					
+					Random r=new Random();
+					switch(r.nextInt(3)){
+					case 0:
+						gc2 = new ImgGameCharacter( ((myMaze.getRows()-1)*board.h) , ((myMaze.getCols()-1))*board.w , 0, 0, new Image(board.getDisplay(), "characters/eli.png"));
+						break;
+					case 1:
+						gc2 = new ImgGameCharacter( ((myMaze.getRows()-1)*board.h) , ((myMaze.getCols()-1))*board.w , 0, 0, new Image(board.getDisplay(), "characters/haim.png"));
+						break;
+					case 2:
+						gc2 = new ImgGameCharacter( ((myMaze.getRows()-1)*board.h) , ((myMaze.getCols()-1))*board.w , 0, 0, new Image(board.getDisplay(), "characters/amit.png"));
+						break;
+					}
+					board.gameCharecters.add(gc2);
+					
+					if(board.gameCharecters.get(0).targetI==0){ //if the other character doesn't start from 0,0 ,this character should.
+						gc2.x=0;
+				        gc2.y=0;
+				        gc2.setTargetI((myMaze.getRows()-1));
+				        gc2.setTargetJ((myMaze.getCols()-1));
+				        
+				        GameCharacter gm1 = board.gameCharecters.get(0);
+				        board.removeGameCharecter(gm1);
+				        board.gameCharecters.add(gm1);
+					}
+					
+					board.redraw();
 				}
 			}
 			
@@ -459,6 +438,165 @@ public class MazeWindow extends BasicWindow implements View{
 		
 	}
 
+	public void closeMe(){
+		Iterator<GameCharacter> ite = board.gameCharecters.iterator();
+		
+		while(ite.hasNext()){
+			GameCharacter gameChar = ite.next();
+			if(gameChar.ball != null){
+				gameChar.ball.stop();
+				gameChar.ball = null;
+			}
+		}
+		
+		shell.dispose();
+	}
+	
+	public void checkWinSituation(int index){
+		GameCharacter myChar = board.gameCharecters.get(index);
+		
+		if(! ((myChar.x/board.w)==myChar.targetJ && (myChar.y/board.h)==myChar.targetI) )
+			return;
+		
+		// play victory music
+		MP3Player player = new MP3Player();
+		player.addToPlayList(new File("audio/finish_music.mp3"));
+		player.play();
+		
+		MessageBox msg = new MessageBox(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		msg.setText("Massage from the awesome programmer");
+		msg.setMessage("player " + (index+1) + " is the winner." + System.lineSeparator() + "congrats and stuff..");
+		msg.open();
+		
+		// move to win window
+	}
+	
+	public void characterShoot(int index){
+		// play shooting music
+		MP3Player player = new MP3Player();
+		player.addToPlayList(new File("audio/shoot_ball_sound.mp3"));
+		player.play();
+		
+		GameCharacter myChar = board.gameCharecters.get(index);
+		
+		TimerTask shoot_task = new TimerTask() {
+			
+			@Override
+			public void run() {
+				
+				  //maze.getDisplay().syncExec(new Runnable() {
+				board.getDisplay().syncExec(new Runnable() {
+
+			    		@Override
+			    		public void run() {
+			    			int i = myChar.ball.x/board.w;
+							int j= myChar.ball.y/board.h;
+							Cell cell1 = myMaze.getCell(j, i);//for some reason it flips the rows with the cols so this fixes it.
+			    			GC gc = new GC(board, SWT.NONE);
+			    			
+			    			Iterator<GameCharacter> ite = board.gameCharecters.iterator();
+						   
+						   while(ite.hasNext()){
+							   GameCharacter gameC = ite.next();
+							   if(gameC==myChar){
+								   if(ite.hasNext())
+									   gameC=ite.next();
+								   else
+									   break;
+							   }
+								
+							   int x = (int) (gameC.x / board.w);
+							   int y = (int) (gameC.y / board.h);
+							
+							   if(i==x && j==y){
+								   
+									// play kill music
+									MP3Player player = new MP3Player();
+									player.addToPlayList(new File("audio/death_sound.mp3"));
+									player.play();
+								   
+								   if(gameC.ball !=null){
+									   	gameC.ball.stop();
+									   	gameC.ball=null;
+								   }
+								   
+								   board.removeGameCharecter(gameC);
+								   
+								   //closes the thread
+								   myChar.ball.stop();
+								   myChar.ball=null;
+								   board.redraw();
+								   board.getDisplay().disposeExec(this);
+								}
+							   
+							   if(board.gameCharecters.size()==1) //this statement is here because we can be sure that if we got in this loop, there are more game character than 1.
+  							   	return;
+							}
+						   
+			    			switch (myChar.ball.dir) {
+							case 'l':
+								// handle left
+								if((cell1.getHasLeftWall() == false) && !((i ==0)&&(j==0))){
+									myChar.ball.x -= (int) (board.w);//*0.1
+									myChar.ball.paint(gc,board.w, board.h);
+								}
+								else{
+									myChar.ball.stop();
+									myChar.ball=null;
+									board.redraw();
+									board.getDisplay().disposeExec(this);
+								}
+								break;
+							case 'u':
+								// handle up
+					        	if((cell1.getHasTopWall() == false)){
+					        		myChar.ball.y -= (int) (board.h);//*0.1
+					        		myChar.ball.paint(gc,board.w, board.h);
+								}
+								else{
+									myChar.ball.stop();
+									myChar.ball=null;
+									board.redraw();
+									board.getDisplay().disposeExec(this);
+								}
+								break;
+							case 'r':
+								// handle right
+								if((cell1.getHasRightWall() == false) && !(j==(myMaze.getCols()-1) && (i==(myMaze.getRows()-1)) )){
+									myChar.ball.x += (int) (board.w);//*0.1
+									myChar.ball.paint(gc,board.w, board.h);
+								}
+								else{
+									myChar.ball.stop();
+									myChar.ball=null;
+									board.redraw();
+									board.getDisplay().disposeExec(this);
+								}
+								break;
+							case 'd':
+								// handle down
+								if((cell1.getHasBottomWall() == false)){
+									myChar.ball.y += (int) (board.h);//*0.1
+									myChar.ball.paint(gc,board.w, board.h);
+								}
+								else{
+									myChar.ball.stop();
+									myChar.ball=null;
+									board.redraw();
+									board.getDisplay().disposeExec(this);
+								}
+								break;
+							}
+			    		}
+			    	 });
+				
+			}
+			
+		};
+		myChar.ball = new Ball(myChar.Last_direction,myChar.x, myChar.y, board,shoot_task);
+
+	}
+	
 	@Override
 	public void setCommands(HashMap<String, Command> commands) {
 		// TODO Auto-generated method stub

@@ -8,10 +8,13 @@ import org.eclipse.swt.graphics.GC;
 public class GameCharacter {
 	int x;
 	int y;
+	char Last_direction;
 	Ball ball = null;
+	int targetI,targetJ;
 		   
-	public GameCharacter(int x,int y) {
+	public GameCharacter(int x,int y,int targetI,int targetJ) {
 		this.x=x;this.y=y;
+		this.targetI=targetI;this.targetJ=targetJ;
 	}
 	public void paint(PaintEvent e,int w,int h){
 		e.gc.setForeground(new Color(null,255,0,0));
@@ -28,5 +31,13 @@ public class GameCharacter {
 	
 	public void setBall(Ball b){
 		this.ball = b;
+	}
+	
+	public void setTargetI(int targetI) {
+		this.targetI = targetI;
+	}
+	
+	public void setTargetJ(int targetJ) {
+		this.targetJ = targetJ;
 	}
 }

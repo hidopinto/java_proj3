@@ -3,12 +3,10 @@ package GUI;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-import algorithms.mazeGenerators.Cell;
 
 public class Ball {
 	

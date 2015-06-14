@@ -9,8 +9,8 @@ public class ImgGameCharacter extends GameCharacter{
 
 	Image image; 
 	
-	public ImgGameCharacter(int x, int y, Image image) {
-		super(x, y);
+	public ImgGameCharacter(int y,int x,int targetI,int targetJ, Image image) {
+		super(x,y,targetI,targetJ);
 		this.image = image;
 	}
 	
