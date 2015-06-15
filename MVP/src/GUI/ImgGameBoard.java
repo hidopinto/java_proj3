@@ -54,6 +54,9 @@ public class ImgGameBoard extends CommonGameBoard {
 					   
 					   gc.x = x + (int)(w*0.2);
 					   gc.y = y + (int)(h*0.2);
+					   
+					   //no need to check on the ball because the w&h settings are only for reSizeing events, which are not likely to happen when a player shoots.
+					   
 				   }//sets the characters to be in the center of the cell, even if the cell's sizes have been changed.
 				   
 				   if(md==null)

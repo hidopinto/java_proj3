@@ -62,7 +62,7 @@ public class MazeWindow extends BasicWindow implements View{
 		board=new ImgGameBoard(shell, SWT.BORDER, md, myMaze);
 		md.setBoard(board);
 		
-		board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,1,2));
+		board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,1,1));
 		
 		board.addKeyListener(new KeyListener() { //allows the user move the character with the arrows.
 	
@@ -430,6 +430,7 @@ public class MazeWindow extends BasicWindow implements View{
 					
 					board.redraw();
 				}
+				board.forceFocus();
 			}
 			
 			@Override
@@ -617,8 +618,7 @@ public class MazeWindow extends BasicWindow implements View{
 
 	@Override
 	public void displaySolution(Solution s) {
-		//Solution sol= myMaze
-		
+		md.drawSol(new GC(board, SWT.NONE), s);
 	}
 
 	@Override
