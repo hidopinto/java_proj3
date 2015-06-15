@@ -493,7 +493,7 @@ public class MazeWindow extends BasicWindow implements View{
 
 			    		@Override
 			    		public void run() {
-			    			if(display.isDisposed())
+			    			if(shell.isDisposed())
 			    				return;
 			    			int i = myChar.ball.x/board.w;
 							int j= myChar.ball.y/board.h;
@@ -594,9 +594,7 @@ public class MazeWindow extends BasicWindow implements View{
 								break;
 							}
 			    		}
-			    	 });
-				System.out.println("shooted");
-				
+			    	 });				
 			}
 			
 		};

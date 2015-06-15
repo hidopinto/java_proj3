@@ -40,8 +40,8 @@ public abstract class BasicWindow  extends Observable implements Runnable{
 		    }
 
 		 } // shell is disposed
-
-		 display.dispose(); // dispose OS components
+		 
+		display.dispose(); // dispose OS components
 
 	}
 	
