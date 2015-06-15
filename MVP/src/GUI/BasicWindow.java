@@ -44,6 +44,7 @@ public abstract class BasicWindow  extends Observable implements Runnable{
 		 display.dispose(); // dispose OS components
 
 	}
+	
 
 }
 

@@ -80,7 +80,7 @@ public class Run {
 		
 		MazeWindow mw = new MazeWindow("maze", 600, 600,null,md);
 
-		CommonGameBoard board=new ImgGameBoard(mw.getShell(), SWT.BORDER, md, m);
+		CommonGameBoard board=new ImgGameBoard(mw.getShell(), SWT.BORDER, md);
 		md.setBoard(board);
 		
 		mw.setGameBoard(board);

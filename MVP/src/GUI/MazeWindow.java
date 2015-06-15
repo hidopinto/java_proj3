@@ -73,7 +73,7 @@ public class MazeWindow extends BasicWindow implements View{
 		board.addKeyListener(new KeyListener() { //allows the user move the character with the arrows.
 	
 			@Override
-			public void keyReleased(KeyEvent e) {
+			public void keyPressed(KeyEvent e) {
 				int i1 = board.gameCharecters.get(0).x/board.w;
 				int j1= board.gameCharecters.get(0).y/board.h;
 				int i2 = -1;
@@ -198,7 +198,7 @@ public class MazeWindow extends BasicWindow implements View{
 			}
 			
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				
 			}
 		});
@@ -483,7 +483,7 @@ public class MazeWindow extends BasicWindow implements View{
 		
 		GameCharacter myChar = board.gameCharecters.get(index);
 		
-		final TimerTask shoot_task = new TimerTask() {
+		TimerTask shoot_task = new TimerTask() {
 			
 			@Override
 			public void run() {
@@ -493,6 +493,8 @@ public class MazeWindow extends BasicWindow implements View{
 
 			    		@Override
 			    		public void run() {
+			    			if(display.isDisposed())
+			    				return;
 			    			int i = myChar.ball.x/board.w;
 							int j= myChar.ball.y/board.h;
 							Cell cell1 = (Cell) md.getTile(j, i);//for some reason it flips the rows with the cols so this fixes it.
@@ -593,6 +595,7 @@ public class MazeWindow extends BasicWindow implements View{
 							}
 			    		}
 			    	 });
+				System.out.println("shooted");
 				
 			}
 			

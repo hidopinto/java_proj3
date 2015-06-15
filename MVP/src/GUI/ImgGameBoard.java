@@ -18,14 +18,13 @@ import algorithms.mazeGenerators.Maze;
  *
  */
 public class ImgGameBoard extends CommonGameBoard {
-	Maze mazeData;
+//	Maze mazeData;
 	
-	public ImgGameBoard(Composite parent,int style, Displayer md,Maze mazeData){
+	public ImgGameBoard(Composite parent,int style, Displayer md){
         super(parent, style | SWT.DOUBLE_BUFFERED);
         this.md = md;
-        this.mazeData = mazeData;
         
-        gameCharecters.add(new ImgGameCharacter(0,0,((mazeData.getRows()-1)) , ((mazeData.getCols()-1)),null));
+        gameCharecters.add(new ImgGameCharacter(0,0,((md.getRows()-1)) , ((md.getCols()-1)),null));
         
         h = 1;
         w = 1;
@@ -39,8 +38,8 @@ public class ImgGameBoard extends CommonGameBoard {
 				   int Last_w = w;
 				   int Last_h = h;
 				   
-				   w=width/mazeData.getCols();
-				   h=height/mazeData.getRows();
+				   w=width/md.getCols();
+				   h=height/md.getRows();
 				   
 				   Iterator<GameCharacter> ite = gameCharecters.iterator();
 				   
