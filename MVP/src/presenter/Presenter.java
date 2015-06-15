@@ -7,17 +7,18 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
 
+import model.MazeNames;
+import model.Model;
+import model.MyModel;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 
-import algorithms.mazeGenerators.Maze;
-import view.MyView;
+import view.CommonView;
 import view.View;
-import model.MazeNames;
-import model.Model;
-import model.MyModel;
+import algorithms.mazeGenerators.Maze;
 
 /**
  * a presenter class, from the mvp framework. connects between the model and the view.
@@ -41,7 +42,7 @@ public class Presenter implements Observer{
 	public void update(Observable arg0, Object arg1) {
 		if(arg0==v)
 		{
-			MyView mv=(MyView) arg0;
+			CommonView mv=(CommonView) arg0;
 			Command c=(Command) arg1;
 			c.doCommand();
 		}
