@@ -4,11 +4,12 @@ import java.util.LinkedList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 
 
 public abstract class CommonGameBoard extends Composite implements GameBoard {
 
-	MazeDisplayer md;
+	Displayer md;
 	int h;
 	int w;
 	//GameCharacter gameCharecter;
@@ -19,8 +20,8 @@ public abstract class CommonGameBoard extends Composite implements GameBoard {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
 		gameCharecters = new LinkedList<GameCharacter>();
 	}
-
-	public void setMD(MazeDisplayer md){
+	
+	public void setMD(Displayer md){
 		this.md = md;
 	}
 	
@@ -36,7 +37,7 @@ public abstract class CommonGameBoard extends Composite implements GameBoard {
 		this.gameCharecters.remove(gameCharecter);
 	}
 	
-	public void SetMD(MazeDisplayer MD){
+	public void SetMD(Displayer MD){
 		this.md = MD;
 	}
 }

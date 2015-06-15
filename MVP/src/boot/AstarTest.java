@@ -44,7 +44,7 @@ public class AstarTest {
 			
 			@Override
 			public int h(State s, State GoalState) {
-				return s.hashCode() * GoalState.hashCode();
+				return s.hashCode();
 			}
 		});
 		

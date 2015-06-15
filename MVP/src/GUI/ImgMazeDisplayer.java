@@ -12,7 +12,7 @@ import algorithms.mazeGenerators.Cell;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 
-public class ImgMazeDisplayer extends CommonMazeDisplayer {
+public class ImgMazeDisplayer extends CommonDisplayer {
 	
 	Image[][] images = null;
 	imgCellDisplay[][] maze =null;
@@ -114,6 +114,22 @@ public class ImgMazeDisplayer extends CommonMazeDisplayer {
 			maze[x][y].paint(gc, x*board.w, y*board.h, board.w, board.h); //for some reason it flips the rows with the cols so this fixes it.
 		}
 							
+	}
+
+	@Override
+	public Object getTile(int i, int j) {
+		return mazeData.getCell(i, j);
+	}
+
+	@Override
+	public int getRows() {
+		return mazeData.getRows();
+	}
+
+	@Override
+	public int getCols() {
+		// TODO Auto-generated method stub
+		return mazeData.getCols();
 	}
 	
 }

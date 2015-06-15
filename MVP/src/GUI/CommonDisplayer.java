@@ -1,6 +1,6 @@
 package GUI;
 
-public abstract class CommonMazeDisplayer implements MazeDisplayer {
+public abstract class CommonDisplayer implements Displayer {
 
 	CommonGameBoard board;
 	

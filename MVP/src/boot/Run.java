@@ -1,32 +1,26 @@
 package boot;
 
 
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import org.eclipse.swt.SWT;
 
+
+
+
+
+import GUI.CommonDisplayer;
+import GUI.CommonGameBoard;
+import GUI.Displayer;
+import GUI.GameBoard;
 /*import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;*/
-
-
+import GUI.ImgGameBoard;
+import GUI.ImgMazeDisplayer;
 import GUI.MazeWindow;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.MazeGeneratorDFS;
-import algorithms.search.BFS;
-import model.MazeData;
-import model.MyModel;
-import presenter.Presenter;
-import presenter.Properties;
-import view.MyView;
-import view.RunnabelCLI;
 
 
 public class Run {
@@ -81,8 +75,15 @@ public class Run {
 		MazeGeneratorDFS mg = new MazeGeneratorDFS();
 		Maze m = new Maze(8,8);
 		mg.generateMaze(m, 0, 0);
-		MazeWindow mw = new MazeWindow("maze", 600, 600);
-		mw.setMaze(m.toString());
+		
+		CommonDisplayer md = new ImgMazeDisplayer(m, null);
+		
+		MazeWindow mw = new MazeWindow("maze", 600, 600,null,md);
+
+		CommonGameBoard board=new ImgGameBoard(mw.getShell(), SWT.BORDER, md, m);
+		md.setBoard(board);
+		
+		mw.setGameBoard(board);
 		mw.run();
 	}
 

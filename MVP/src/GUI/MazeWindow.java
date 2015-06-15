@@ -34,17 +34,23 @@ import algorithms.search.Solution;
  */
 public class MazeWindow extends BasicWindow implements View{
 
-	Maze myMaze;
+//	Maze myMaze;
 	CommonGameBoard board;
-	CommonMazeDisplayer md;
+	CommonDisplayer md;
 	
 	
-	public MazeWindow(String title, int width, int height) {
+	public MazeWindow(String title, int width, int height,CommonGameBoard board, CommonDisplayer md) {
 		super(title, width, height);
+		this.board=board;
+		this.md=md;
 	}
-
-	public void setMaze(String m){
-		this.myMaze = new Maze(m);
+	
+	public void setGameBoard(CommonGameBoard board){
+		this.board = board;
+	}
+	
+	public void setDisplayer(CommonDisplayer md){
+		this.md = md;
 	}
 	
 	/* (non-Javadoc)
@@ -57,10 +63,10 @@ public class MazeWindow extends BasicWindow implements View{
 		//Text txt = new Text(shell, SWT.BORDER);
 		//txt.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		
-		md = new ImgMazeDisplayer(myMaze, null);
-		
-		board=new ImgGameBoard(shell, SWT.BORDER, md, myMaze);
-		md.setBoard(board);
+//		md = new ImgMazeDisplayer(myMaze, null);
+//		
+//		board=new ImgGameBoard(shell, SWT.BORDER, md, myMaze);
+//		md.setBoard(board);
 		
 		board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,1,1));
 		
@@ -76,10 +82,10 @@ public class MazeWindow extends BasicWindow implements View{
 				if(board.gameCharecters.size()==2){
 					i2 = board.gameCharecters.get(1).x/board.w;
 					j2= board.gameCharecters.get(1).y/board.h;
-					cell2 = myMaze.getCell(j2,i2);//for some reason it flips the rows with the cols so this fixes it.
+					cell2 = (Cell) md.getTile(j2,i2);//for some reason it flips the rows with the cols so this fixes it.
 				}
 				
-				Cell cell1 = myMaze.getCell(j1,i1);//for some reason it flips the rows with the cols so this fixes it.
+				Cell cell1 = (Cell) md.getTile(j1,i1);//for some reason it flips the rows with the cols so this fixes it.
 				switch( e.keyCode ) {
 				case SWT.ARROW_LEFT:
 		            // player1 handle left
@@ -102,7 +108,7 @@ public class MazeWindow extends BasicWindow implements View{
 		            break;
 		        case SWT.ARROW_RIGHT:
 		            // player1 handle right
-					if((cell1.getHasRightWall() == false) && !(j1==(myMaze.getCols()-1) && (i1==(myMaze.getRows()-1)) )){
+					if((cell1.getHasRightWall() == false) && !(j1==(md.getCols()-1) && (i1==(md.getRows()-1)) )){
 						board.gameCharecters.get(0).x +=board.w;
 						board.redraw();	
 						board.gameCharecters.get(0).Last_direction='r';
@@ -145,7 +151,7 @@ public class MazeWindow extends BasicWindow implements View{
 		            // player2 handle right
 		        	if(i2==-1)
 		        		return;
-					if((cell2.getHasRightWall() == false) && !(j2==(myMaze.getCols()-1) && (i2==(myMaze.getRows()-1)) )){
+					if((cell2.getHasRightWall() == false) && !(j2==(md.getCols()-1) && (i2==(md.getRows()-1)) )){
 						board.gameCharecters.get(1).x +=board.w;
 						board.redraw();	
 						board.gameCharecters.get(1).Last_direction='r';
@@ -220,13 +226,13 @@ public class MazeWindow extends BasicWindow implements View{
 				if(dir=="")
 					return; //mouse didn't move so do nothing.
 				
-				Cell curCell = myMaze.getCell( mouseI , mouseJ );
+				Cell curCell = (Cell) md.getTile( mouseI , mouseJ );
 				Cell nextCell = null;
 				
 				switch(dir){
 				case("ru"):
-					if(!curCell.getHasRightWall() && !(mouseI==(myMaze.getRows()-1) && mouseJ==(myMaze.getCols()-1) )){
-						nextCell=myMaze.getCell(mouseI, mouseJ+1);
+					if(!curCell.getHasRightWall() && !(mouseI==(md.getRows()-1) && mouseJ==(md.getCols()-1) )){
+						nextCell=(Cell) md.getTile(mouseI, mouseJ+1);
 						if(!nextCell.getHasTopWall()){
 							//move right & up
 							gameC.x +=board.w;
@@ -235,8 +241,8 @@ public class MazeWindow extends BasicWindow implements View{
 						}
 					}
 					if(!curCell.getHasTopWall()){
-						nextCell=myMaze.getCell(mouseI-1, mouseJ);
-						if(!nextCell.getHasRightWall() && !((mouseI-1)==(myMaze.getRows()-1) && mouseJ==(myMaze.getCols()-1) )){
+						nextCell=(Cell) md.getTile(mouseI-1, mouseJ);
+						if(!nextCell.getHasRightWall() && !((mouseI-1)==(md.getRows()-1) && mouseJ==(md.getCols()-1) )){
 							//move up && right
 							gameC.x +=board.w;
 							gameC.y -=board.h;
@@ -247,8 +253,8 @@ public class MazeWindow extends BasicWindow implements View{
 					}
 					break;
 				case("rd"):
-					if(!curCell.getHasRightWall() && !(mouseI==(myMaze.getRows()-1) && mouseJ==(myMaze.getCols()-1) )){
-						nextCell=myMaze.getCell(mouseI, mouseJ+1);
+					if(!curCell.getHasRightWall() && !(mouseI==(md.getRows()-1) && mouseJ==(md.getCols()-1) )){
+						nextCell=(Cell) md.getTile(mouseI, mouseJ+1);
 						if(!nextCell.getHasBottomWall()){
 							//move right & up
 							gameC.x +=board.w;
@@ -257,8 +263,8 @@ public class MazeWindow extends BasicWindow implements View{
 						}
 					}
 					if(!curCell.getHasBottomWall()){
-						nextCell=myMaze.getCell(mouseI+1, mouseJ);
-						if(!nextCell.getHasRightWall() && !((mouseI+1)==(myMaze.getRows()-1) && mouseJ==(myMaze.getCols()-1) )){
+						nextCell=(Cell) md.getTile(mouseI+1, mouseJ);
+						if(!nextCell.getHasRightWall() && !((mouseI+1)==(md.getRows()-1) && mouseJ==(md.getCols()-1) )){
 							//move up && right
 							gameC.x +=board.w;
 							gameC.y +=board.h;
@@ -270,7 +276,7 @@ public class MazeWindow extends BasicWindow implements View{
 					break;
 				case("lu"):
 					if(!curCell.getHasLeftWall() && !(mouseI==0 && mouseJ==0)){
-						nextCell=myMaze.getCell(mouseI, mouseJ-1);
+						nextCell=(Cell) md.getTile(mouseI, mouseJ-1);
 						if(!nextCell.getHasTopWall()){
 							//move left & up
 							gameC.x -=board.w;
@@ -279,7 +285,7 @@ public class MazeWindow extends BasicWindow implements View{
 						}
 					}
 					if(!curCell.getHasTopWall()){
-						nextCell=myMaze.getCell(mouseI-1, mouseJ);
+						nextCell=(Cell) md.getTile(mouseI-1, mouseJ);
 						if(!nextCell.getHasLeftWall() && !((mouseI-1)==0 && mouseJ==0)){
 							//move up && left
 							gameC.x -=board.w;
@@ -292,7 +298,7 @@ public class MazeWindow extends BasicWindow implements View{
 					break;
 				case("ld"):
 					if(!curCell.getHasLeftWall() && !(mouseI==0 && mouseJ==0)){
-						nextCell=myMaze.getCell(mouseI, mouseJ-1);
+						nextCell=(Cell) md.getTile(mouseI, mouseJ-1);
 						if(!nextCell.getHasBottomWall()){
 							//move left & down
 							gameC.x -=board.w;
@@ -301,7 +307,7 @@ public class MazeWindow extends BasicWindow implements View{
 						}
 					}
 					if(!curCell.getHasBottomWall()){
-						nextCell=myMaze.getCell(mouseI+1, mouseJ);
+						nextCell=(Cell) md.getTile(mouseI+1, mouseJ);
 						if(!nextCell.getHasLeftWall() && !((mouseI+1)==0 && mouseJ==0)){
 							//move down && left
 							gameC.x -=board.w;
@@ -313,7 +319,7 @@ public class MazeWindow extends BasicWindow implements View{
 					}
 					break;
 				case("r"):
-					if(!curCell.getHasRightWall() && !(mouseI==(myMaze.getRows()-1) && mouseJ==(myMaze.getCols()-1) )){
+					if(!curCell.getHasRightWall() && !(mouseI==(md.getRows()-1) && mouseJ==(md.getCols()-1) )){
 						//move right
 						gameC.x +=board.w;
 						gameC.Last_direction='r';
@@ -397,22 +403,19 @@ public class MazeWindow extends BasicWindow implements View{
 				if(board==null)
 					return;
 				
-				if(myMaze ==null)
-					return;
-				
 				if(board.gameCharecters.size()<2){
 					GameCharacter gc2=null;
 					
 					Random r=new Random();
 					switch(r.nextInt(3)){
 					case 0:
-						gc2 = new ImgGameCharacter( ((myMaze.getRows()-1)*board.h) , ((myMaze.getCols()-1))*board.w , 0, 0, new Image(board.getDisplay(), "characters/eli.png"));
+						gc2 = new ImgGameCharacter( ((md.getRows()-1)*board.h) , ((md.getCols()-1))*board.w , 0, 0, new Image(board.getDisplay(), "characters/eli.png"));
 						break;
 					case 1:
-						gc2 = new ImgGameCharacter( ((myMaze.getRows()-1)*board.h) , ((myMaze.getCols()-1))*board.w , 0, 0, new Image(board.getDisplay(), "characters/haim.png"));
+						gc2 = new ImgGameCharacter( ((md.getRows()-1)*board.h) , ((md.getCols()-1))*board.w , 0, 0, new Image(board.getDisplay(), "characters/haim.png"));
 						break;
 					case 2:
-						gc2 = new ImgGameCharacter( ((myMaze.getRows()-1)*board.h) , ((myMaze.getCols()-1))*board.w , 0, 0, new Image(board.getDisplay(), "characters/amit.png"));
+						gc2 = new ImgGameCharacter( ((md.getRows()-1)*board.h) , ((md.getCols()-1))*board.w , 0, 0, new Image(board.getDisplay(), "characters/amit.png"));
 						break;
 					}
 					board.gameCharecters.add(gc2);
@@ -420,8 +423,8 @@ public class MazeWindow extends BasicWindow implements View{
 					if(board.gameCharecters.get(0).targetI==0){ //if the other character doesn't start from 0,0 ,this character should.
 						gc2.x=0;
 				        gc2.y=0;
-				        gc2.setTargetI((myMaze.getRows()-1));
-				        gc2.setTargetJ((myMaze.getCols()-1));
+				        gc2.setTargetI((md.getRows()-1));
+				        gc2.setTargetJ((md.getCols()-1));
 				        
 				        GameCharacter gm1 = board.gameCharecters.get(0);
 				        board.removeGameCharecter(gm1);
@@ -480,7 +483,7 @@ public class MazeWindow extends BasicWindow implements View{
 		
 		GameCharacter myChar = board.gameCharecters.get(index);
 		
-		TimerTask shoot_task = new TimerTask() {
+		final TimerTask shoot_task = new TimerTask() {
 			
 			@Override
 			public void run() {
@@ -492,7 +495,7 @@ public class MazeWindow extends BasicWindow implements View{
 			    		public void run() {
 			    			int i = myChar.ball.x/board.w;
 							int j= myChar.ball.y/board.h;
-							Cell cell1 = myMaze.getCell(j, i);//for some reason it flips the rows with the cols so this fixes it.
+							Cell cell1 = (Cell) md.getTile(j, i);//for some reason it flips the rows with the cols so this fixes it.
 			    			GC gc = new GC(board, SWT.NONE);
 			    			
 			    			Iterator<GameCharacter> ite = board.gameCharecters.iterator();
@@ -563,7 +566,7 @@ public class MazeWindow extends BasicWindow implements View{
 								break;
 							case 'r':
 								// handle right
-								if((cell1.getHasRightWall() == false) && !(j==(myMaze.getCols()-1) && (i==(myMaze.getRows()-1)) )){
+								if((cell1.getHasRightWall() == false) && !(j==(md.getCols()-1) && (i==(md.getRows()-1)) )){
 									myChar.ball.x += (int) (board.w);//*0.1
 									myChar.ball.paint(gc,board.w, board.h);
 								}
