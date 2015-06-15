@@ -28,13 +28,9 @@ import algorithms.mazeGenerators.Cell;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 
-/**
- * @author HFL
- *
- */
+
 public class MazeWindow extends BasicWindow implements View{
 
-//	Maze myMaze;
 	CommonGameBoard board;
 	CommonDisplayer md;
 	
@@ -63,138 +59,144 @@ public class MazeWindow extends BasicWindow implements View{
 		//Text txt = new Text(shell, SWT.BORDER);
 		//txt.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		
-//		md = new ImgMazeDisplayer(myMaze, null);
-//		
-//		board=new ImgGameBoard(shell, SWT.BORDER, md, myMaze);
-//		md.setBoard(board);
-		
 		board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,1,1));
 		
 		board.addKeyListener(new KeyListener() { //allows the user move the character with the arrows.
 	
 			@Override
 			public void keyPressed(KeyEvent e) {
-				int i1 = board.gameCharecters.get(0).x/board.w;
-				int j1= board.gameCharecters.get(0).y/board.h;
-				int i2 = -1;
-				int j2 = -1;
-				Cell cell2 =null;
-				if(board.gameCharecters.size()==2){
-					i2 = board.gameCharecters.get(1).x/board.w;
-					j2= board.gameCharecters.get(1).y/board.h;
-					cell2 = (Cell) md.getTile(j2,i2);//for some reason it flips the rows with the cols so this fixes it.
-				}
 				
-				Cell cell1 = (Cell) md.getTile(j1,i1);//for some reason it flips the rows with the cols so this fixes it.
-				switch( e.keyCode ) {
-				case SWT.ARROW_LEFT:
-		            // player1 handle left
-					if((cell1.getHasLeftWall() == false) && !((i1 ==0)&&(j1==0))){
+				display.asyncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						if(shell.isDisposed())
+							return;
+						int i1 = board.gameCharecters.get(0).x/board.w;
+						int j1= board.gameCharecters.get(0).y/board.h;
+						int i2 = -1;
+						int j2 = -1;
+						Cell cell2 =null;
+						if(board.gameCharecters.size()==2){
+							i2 = board.gameCharecters.get(1).x/board.w;
+							j2= board.gameCharecters.get(1).y/board.h;
+							cell2 = (Cell) md.getTile(j2,i2);//for some reason it flips the rows with the cols so this fixes it.
+						}
 						
-						board.gameCharecters.get(0).x -=board.w;
-						board.redraw();
-						board.gameCharecters.get(0).Last_direction='l';
-						checkWinSituation(0);
-					}
-		            break;
-		        case SWT.ARROW_UP:
-		            // player1 handle up
-		        	if((cell1.getHasTopWall() == false)){
-		        		board.gameCharecters.get(0).y -=board.h;
-		        		board.redraw();
-		        		board.gameCharecters.get(0).Last_direction='u';
-						checkWinSituation(0);
-						}
-		            break;
-		        case SWT.ARROW_RIGHT:
-		            // player1 handle right
-					if((cell1.getHasRightWall() == false) && !(j1==(md.getCols()-1) && (i1==(md.getRows()-1)) )){
-						board.gameCharecters.get(0).x +=board.w;
-						board.redraw();	
-						board.gameCharecters.get(0).Last_direction='r';
-						checkWinSituation(0);
-						}
-		            break;
-		        case SWT.ARROW_DOWN:
-		            // player1 handle down
-					if((cell1.getHasBottomWall() == false)){
-						board.gameCharecters.get(0).y +=board.h;
-						board.redraw();	
-						board.gameCharecters.get(0).Last_direction='d';
-						checkWinSituation(0);
-						}
-					break;
-		        case 97:
-		            // player2 handle left
-		        	if(i2==-1)
-		        		return;
-					if((cell2.getHasLeftWall() == false) && !((i2 ==0)&&(j2==0))){
+						Cell cell1 = (Cell) md.getTile(j1,i1);//for some reason it flips the rows with the cols so this fixes it.
+						switch( e.keyCode ) {
+						case SWT.ARROW_LEFT:
+				            // player1 handle left
+							if((cell1.getHasLeftWall() == false) && !((i1 ==0)&&(j1==0))){
+								
+								board.gameCharecters.get(0).x -=board.w;
+								board.redraw();
+								board.gameCharecters.get(0).Last_direction='l';
+								checkWinSituation(0);
+							}
+				            break;
+				        case SWT.ARROW_UP:
+				            // player1 handle up
+				        	if((cell1.getHasTopWall() == false)){
+				        		board.gameCharecters.get(0).y -=board.h;
+				        		board.redraw();
+				        		board.gameCharecters.get(0).Last_direction='u';
+								checkWinSituation(0);
+								}
+				            break;
+				        case SWT.ARROW_RIGHT:
+				            // player1 handle right
+							if((cell1.getHasRightWall() == false) && !(j1==(md.getCols()-1) && (i1==(md.getRows()-1)) )){
+								board.gameCharecters.get(0).x +=board.w;
+								board.redraw();	
+								board.gameCharecters.get(0).Last_direction='r';
+								checkWinSituation(0);
+								}
+				            break;
+				        case SWT.ARROW_DOWN:
+				            // player1 handle down
+							if((cell1.getHasBottomWall() == false)){
+								board.gameCharecters.get(0).y +=board.h;
+								board.redraw();	
+								board.gameCharecters.get(0).Last_direction='d';
+								checkWinSituation(0);
+								}
+							break;
+				        case 97:
+				            // player2 handle left
+				        	if(i2==-1)
+				        		return;
+							if((cell2.getHasLeftWall() == false) && !((i2 ==0)&&(j2==0))){
+								
+								board.gameCharecters.get(1).x -=board.w;
+								board.redraw();
+								board.gameCharecters.get(1).Last_direction='l';
+								checkWinSituation(1);
+							}
+				            break;
+				        case 119:
+				            // player2 handle up
+				        	if(i2==-1)
+				        		return;
+				        	if((cell2.getHasTopWall() == false)){
+				        		board.gameCharecters.get(1).y -=board.h;
+				        		board.redraw();
+				        		board.gameCharecters.get(1).Last_direction='u';
+								checkWinSituation(1);
+								}
+				            break;
+				        case 100:
+				            // player2 handle right
+				        	if(i2==-1)
+				        		return;
+							if((cell2.getHasRightWall() == false) && !(j2==(md.getCols()-1) && (i2==(md.getRows()-1)) )){
+								board.gameCharecters.get(1).x +=board.w;
+								board.redraw();	
+								board.gameCharecters.get(1).Last_direction='r';
+								checkWinSituation(1);
+								}
+							break;
+				        case 115:
+				            // player2 handle down
+				        	if(i2==-1)
+				        		return;
+							if((cell2.getHasBottomWall() == false)){
+								board.gameCharecters.get(1).y +=board.h;
+								board.redraw();	
+								board.gameCharecters.get(1).Last_direction='d';
+								checkWinSituation(1);
+								}
+							break;
+				        case SWT.ESC:
+				            // handle esc
+				        	closeMe();
+							break;
 						
-						board.gameCharecters.get(1).x -=board.w;
-						board.redraw();
-						board.gameCharecters.get(1).Last_direction='l';
-						checkWinSituation(1);
+				        case SWT.ALT:
+				        	if(board.gameCharecters.get(0).Last_direction == 's')
+				        		break;
+				        	if(board.gameCharecters.get(0).ball != null)
+				        		break;
+				        	
+				        	characterShoot(0);
+				        	
+				        	break;
+				        case SWT.SPACE:
+				        	if(i2==-1)
+				        		return;
+				        	if(board.gameCharecters.get(1).Last_direction == 's')
+				        		break;
+				        	if(board.gameCharecters.get(1).ball != null)
+				        		break;
+				        	
+				        	characterShoot(1);
+				        	
+				        	break;
+				     }
+
+						display.disposeExec(this);
 					}
-		            break;
-		        case 119:
-		            // player2 handle up
-		        	if(i2==-1)
-		        		return;
-		        	if((cell2.getHasTopWall() == false)){
-		        		board.gameCharecters.get(1).y -=board.h;
-		        		board.redraw();
-		        		board.gameCharecters.get(1).Last_direction='u';
-						checkWinSituation(1);
-						}
-		            break;
-		        case 100:
-		            // player2 handle right
-		        	if(i2==-1)
-		        		return;
-					if((cell2.getHasRightWall() == false) && !(j2==(md.getCols()-1) && (i2==(md.getRows()-1)) )){
-						board.gameCharecters.get(1).x +=board.w;
-						board.redraw();	
-						board.gameCharecters.get(1).Last_direction='r';
-						checkWinSituation(1);
-						}
-					break;
-		        case 115:
-		            // player2 handle down
-		        	if(i2==-1)
-		        		return;
-					if((cell2.getHasBottomWall() == false)){
-						board.gameCharecters.get(1).y +=board.h;
-						board.redraw();	
-						board.gameCharecters.get(1).Last_direction='d';
-						checkWinSituation(1);
-						}
-					break;
-		        case SWT.ESC:
-		            // handle esc
-		        	closeMe();
-					break;
-				
-		        case SWT.ALT:
-		        	if(board.gameCharecters.get(0).Last_direction == 's')
-		        		break;
-		        	if(board.gameCharecters.get(0).ball != null)
-		        		break;
-		        	
-		        	characterShoot(0);
-		        	
-		        	break;
-		        case SWT.SPACE:
-		        	if(i2==-1)
-		        		return;
-		        	if(board.gameCharecters.get(1).Last_direction == 's')
-		        		break;
-		        	if(board.gameCharecters.get(1).ball != null)
-		        		break;
-		        	
-		        	characterShoot(1);
-		        	
-		        	break;
-		     }
+				});
 			}
 			
 			@Override

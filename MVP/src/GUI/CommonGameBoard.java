@@ -12,7 +12,6 @@ public abstract class CommonGameBoard extends Composite implements GameBoard {
 	Displayer md;
 	int h;
 	int w;
-	//GameCharacter gameCharecter;
 	LinkedList<GameCharacter> gameCharecters;
 	
 	

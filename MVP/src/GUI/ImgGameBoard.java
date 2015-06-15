@@ -13,12 +13,8 @@ import org.eclipse.swt.widgets.Composite;
 
 import algorithms.mazeGenerators.Maze;
 
-/**
- * @author HFL
- *
- */
+
 public class ImgGameBoard extends CommonGameBoard {
-//	Maze mazeData;
 	
 	public ImgGameBoard(Composite parent,int style, Displayer md){
         super(parent, style | SWT.DOUBLE_BUFFERED);
