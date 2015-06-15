@@ -13,10 +13,12 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -33,7 +35,8 @@ public class MazeWindow extends BasicWindow implements View{
 
 	CommonGameBoard board;
 	CommonDisplayer md;
-	
+	boolean playMusic = true;
+	boolean crtlPressed = false;
 	
 	public MazeWindow(String title, int width, int height,CommonGameBoard board, CommonDisplayer md) {
 		super(title, width, height);
@@ -59,7 +62,14 @@ public class MazeWindow extends BasicWindow implements View{
 		//Text txt = new Text(shell, SWT.BORDER);
 		//txt.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		
-		board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,1,1));
+		board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,2,1));
+		board.getShell().layout();
+		/*GridLayout layout = new GridLayout(md.getCols(), true);
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+		board.setLayout(layout);
+		board.layout();
+		board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,md.getRows(),md.getCols() ));*/
 		
 		board.addKeyListener(new KeyListener() { //allows the user move the character with the arrows.
 	
@@ -86,6 +96,8 @@ public class MazeWindow extends BasicWindow implements View{
 						Cell cell1 = (Cell) md.getTile(j1,i1);//for some reason it flips the rows with the cols so this fixes it.
 						switch( e.keyCode ) {
 						case SWT.ARROW_LEFT:
+							if(board.gameCharecters.get(0).targetI==0)
+								return;
 				            // player1 handle left
 							if((cell1.getHasLeftWall() == false) && !((i1 ==0)&&(j1==0))){
 								
@@ -96,6 +108,8 @@ public class MazeWindow extends BasicWindow implements View{
 							}
 				            break;
 				        case SWT.ARROW_UP:
+				        	if(board.gameCharecters.get(0).targetI==0)
+								return;
 				            // player1 handle up
 				        	if((cell1.getHasTopWall() == false)){
 				        		board.gameCharecters.get(0).y -=board.h;
@@ -105,6 +119,8 @@ public class MazeWindow extends BasicWindow implements View{
 								}
 				            break;
 				        case SWT.ARROW_RIGHT:
+				        	if(board.gameCharecters.get(0).targetI==0)
+								return;
 				            // player1 handle right
 							if((cell1.getHasRightWall() == false) && !(j1==(md.getCols()-1) && (i1==(md.getRows()-1)) )){
 								board.gameCharecters.get(0).x +=board.w;
@@ -114,6 +130,8 @@ public class MazeWindow extends BasicWindow implements View{
 								}
 				            break;
 				        case SWT.ARROW_DOWN:
+				        	if(board.gameCharecters.get(0).targetI==0)
+								return;
 				            // player1 handle down
 							if((cell1.getHasBottomWall() == false)){
 								board.gameCharecters.get(0).y +=board.h;
@@ -124,8 +142,15 @@ public class MazeWindow extends BasicWindow implements View{
 							break;
 				        case 97:
 				            // player2 handle left
-				        	if(i2==-1)
-				        		return;
+				        	if(i2==-1){
+				        		if(board.gameCharecters.get(0).targetI==0){
+				        			board.gameCharecters.get(0).x -=board.w;
+									board.redraw();
+									board.gameCharecters.get(0).Last_direction='l';
+									checkWinSituation(0);
+				        		}
+				        		break;
+							}
 							if((cell2.getHasLeftWall() == false) && !((i2 ==0)&&(j2==0))){
 								
 								board.gameCharecters.get(1).x -=board.w;
@@ -136,8 +161,15 @@ public class MazeWindow extends BasicWindow implements View{
 				            break;
 				        case 119:
 				            // player2 handle up
-				        	if(i2==-1)
-				        		return;
+				        	if(i2==-1){
+				        		if(board.gameCharecters.get(0).targetI==0){
+				        			board.gameCharecters.get(0).y -=board.h;
+					        		board.redraw();
+					        		board.gameCharecters.get(0).Last_direction='u';
+									checkWinSituation(0);
+				        		}
+				        		break;
+				        	}
 				        	if((cell2.getHasTopWall() == false)){
 				        		board.gameCharecters.get(1).y -=board.h;
 				        		board.redraw();
@@ -147,8 +179,15 @@ public class MazeWindow extends BasicWindow implements View{
 				            break;
 				        case 100:
 				            // player2 handle right
-				        	if(i2==-1)
-				        		return;
+				        	if(i2==-1){
+				        		if(board.gameCharecters.get(0).targetI==0){
+				        			board.gameCharecters.get(0).x +=board.w;
+									board.redraw();	
+									board.gameCharecters.get(0).Last_direction='r';
+									checkWinSituation(0);
+				        		}
+				        		break;
+				        	}
 							if((cell2.getHasRightWall() == false) && !(j2==(md.getCols()-1) && (i2==(md.getRows()-1)) )){
 								board.gameCharecters.get(1).x +=board.w;
 								board.redraw();	
@@ -158,8 +197,15 @@ public class MazeWindow extends BasicWindow implements View{
 							break;
 				        case 115:
 				            // player2 handle down
-				        	if(i2==-1)
-				        		return;
+				        	if(i2==-1){
+				        		if(board.gameCharecters.get(0).targetI==0){
+				        			board.gameCharecters.get(0).y +=board.h;
+									board.redraw();	
+									board.gameCharecters.get(0).Last_direction='d';
+									checkWinSituation(0);
+				        		}
+				        		break;
+				        	}
 							if((cell2.getHasBottomWall() == false)){
 								board.gameCharecters.get(1).y +=board.h;
 								board.redraw();	
@@ -173,6 +219,8 @@ public class MazeWindow extends BasicWindow implements View{
 							break;
 						
 				        case SWT.ALT:
+				        	if(board.gameCharecters.get(0).targetI==0)
+				        		break;
 				        	if(board.gameCharecters.get(0).Last_direction == 's')
 				        		break;
 				        	if(board.gameCharecters.get(0).ball != null)
@@ -192,6 +240,9 @@ public class MazeWindow extends BasicWindow implements View{
 				        	characterShoot(1);
 				        	
 				        	break;
+				        case (SWT.CTRL):
+				        	crtlPressed =true; 
+							break;
 				     }
 
 						display.disposeExec(this);
@@ -201,10 +252,24 @@ public class MazeWindow extends BasicWindow implements View{
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				
+				if((e.stateMask & SWT.CTRL)!=0)
+		        	crtlPressed =false;
 			}
 		});
 
+		board.addMouseWheelListener(new MouseWheelListener() {
+			
+			@Override
+			public void mouseScrolled(MouseEvent e) {
+				if(crtlPressed){
+					if(e.count>0 && (board.getSize().y *1.1)<= shell.getSize().y && (board.getSize().x *1.1)<= shell.getSize().x)//scroll up
+						board.setSize( (int) (board.getSize().x * 1.1), (int) (board.getSize().y * 1.1) );
+					if(e.count<0)
+						board.setSize( (int) (board.getSize().x / 1.1), (int) (board.getSize().y / 1.1) );
+				}
+			}
+		});
+		
 		board.addMouseListener(new MouseListener() {
 			
 			int mouseI=-1;
@@ -442,6 +507,31 @@ public class MazeWindow extends BasicWindow implements View{
 			public void widgetDefaultSelected(SelectionEvent arg0) {}
 		});
 		
+		Button sound = new Button(shell, SWT.PUSH);
+		sound.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
+		sound.setImage(new Image(board.getDisplay(), new ImageData("animations/play.png")));
+		sound.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				playMusic =  !playMusic;
+				if(playMusic)
+					sound.setImage(new Image(board.getDisplay(), new ImageData("animations/play.png")));
+				else
+					sound.setImage(new Image(board.getDisplay(), new ImageData("animations/mute.png")));
+				
+				if(!playMusic){
+					MP3Player player = new MP3Player();
+					player.pause();
+				}
+				
+				board.forceFocus();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {}
+		});
+		
 	}
 
 	public void closeMe(){
@@ -464,11 +554,12 @@ public class MazeWindow extends BasicWindow implements View{
 		if(! ((myChar.x/board.w)==myChar.targetJ && (myChar.y/board.h)==myChar.targetI) )
 			return;
 		
-		// play victory music
-		MP3Player player = new MP3Player();
-		player.addToPlayList(new File("audio/finish_music.mp3"));
-		player.play();
-		
+		if(playMusic){
+			// play victory music
+			MP3Player player = new MP3Player();
+			player.addToPlayList(new File("audio/finish_music.mp3"));
+			player.play();
+		}
 		MessageBox msg = new MessageBox(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		msg.setText("Massage from the awesome programmer");
 		msg.setMessage("player " + (index+1) + " is the winner." + System.lineSeparator() + "congrats and stuff..");
@@ -478,10 +569,12 @@ public class MazeWindow extends BasicWindow implements View{
 	}
 	
 	public void characterShoot(int index){
-		// play shooting music
-		MP3Player player = new MP3Player();
-		player.addToPlayList(new File("audio/shoot_ball_sound.mp3"));
-		player.play();
+		if(playMusic){
+			// play shooting music
+			MP3Player player = new MP3Player();
+			player.addToPlayList(new File("audio/shoot_ball_sound.mp3"));
+			player.play();
+		}
 		
 		GameCharacter myChar = board.gameCharecters.get(index);
 		
@@ -518,10 +611,12 @@ public class MazeWindow extends BasicWindow implements View{
 							
 							   if(i==x && j==y){
 								   
-									// play kill music
-									MP3Player player = new MP3Player();
-									player.addToPlayList(new File("audio/death_sound.mp3"));
-									player.play();
+								   if(playMusic){
+										// play kill music
+									   	MP3Player player = new MP3Player();
+										player.addToPlayList(new File("audio/death_sound.mp3"));
+										player.play();
+								   }
 								   
 								   if(gameC.ball !=null){
 									   	gameC.ball.stop();

@@ -26,13 +26,15 @@ public class ImgMazeDisplayer extends CommonDisplayer {
 	
 	@Override
 	public void draw(PaintEvent e) {
+		if(board==null)
+			return;
 		
-		GridLayout layout = new GridLayout(mazeData.getCols(), true);
+		/*GridLayout layout = new GridLayout(mazeData.getCols(), true);
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
 		board.setLayout(layout);
 		board.layout();
-		board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,mazeData.getRows(),mazeData.getCols() ));
+		board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true,mazeData.getRows(),mazeData.getCols() ));*/
 		
 		if(maze==null){//or maze have been changed
 			   if(images==null){
@@ -49,7 +51,7 @@ public class ImgMazeDisplayer extends CommonDisplayer {
 					   }
 				   }
 		   }//setting up the maze
-		board.getShell().layout();
+		//board.getShell().layout();
 		
 		for(int i=0;i<mazeData.getCols();i++){
 			for(int j=0;j<mazeData.getRows();j++){
@@ -86,6 +88,9 @@ public class ImgMazeDisplayer extends CommonDisplayer {
 
 	@Override
 	public void drawSol(GC gc, Solution sol) {
+		if(board==null)
+			return;
+		
 		String[] solMaze = sol.toString().split(System.lineSeparator());
 		String[] CellPoint = null;
 		
@@ -102,6 +107,9 @@ public class ImgMazeDisplayer extends CommonDisplayer {
 	
 	@Override
 	public void undrawSol(GC gc, Solution sol) {
+		if(board==null)
+			return;
+		
 		String[] solMaze = sol.toString().split(System.lineSeparator());
 		String[] CellPoint = null;
 		

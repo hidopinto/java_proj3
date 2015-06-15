@@ -11,8 +11,6 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 
-import algorithms.mazeGenerators.Maze;
-
 
 public class ImgGameBoard extends CommonGameBoard {
 	

@@ -15,8 +15,6 @@ public class RunnabelCLI implements Runnable{
 	
 	BufferedReader in;
 	PrintWriter out;
-	//UserCommands userCommands;
-	//String lastCommand;
 	CommonView v;
 	/**
 	 * general getters and setters
@@ -40,7 +38,6 @@ public class RunnabelCLI implements Runnable{
 	 * @param v - a MyView.
 	 */
 	public RunnabelCLI(BufferedReader in, PrintWriter out,MyView v) {
-		//super(in, out,null);
 		this.in = in;
 		this.out = out;
 		this.v=v;
