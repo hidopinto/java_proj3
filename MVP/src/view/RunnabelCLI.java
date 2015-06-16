@@ -90,7 +90,7 @@ public class RunnabelCLI implements Runnable{
 						//do{
 						name=uin.next();
 						v.setChanged1();
-						v.notifyObservers(command+","+ name +":" + cols +":"+ rows);
+						v.notifyObservers(commandName+","+ name +":" + cols +":"+ rows);
 					}
 					
 					if(commandName.equals("SolveMaze"))
@@ -99,12 +99,12 @@ public class RunnabelCLI implements Runnable{
 						System.out.println("enter name of maze");
 						name=uin.nextLine();
 						v.setChanged1();
-						v.notifyObservers(command+":"+ name);
+						v.notifyObservers(commandName+":"+ name);
 					}
 					
 					
 					v.setChanged1();
-					v.notifyObservers(command);
+					v.notifyObservers(commandName);
 					
 				}
 				System.out.print("Enter command: ");
