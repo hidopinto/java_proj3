@@ -42,7 +42,7 @@ public class MyModel extends Observable implements Model {
 	Solution sol;
 	ExecutorService executor = Executors.newCachedThreadPool();
 	HashMap<String, Solution> hm = new  HashMap<String, Solution>(); // String represents the Maze using toString function. using String instead of Maze, it will be easier to use HashMap
-	HashMap<String,String> mazesNames = new HashMap<String, String>(); //the other HashMap for saving maze's names. The first String describes a maze;
+	HashMap<String,Maze> mazesNames = new HashMap<String, Maze>(); //the other HashMap for saving maze's names. The second String describes a maze;
 	Searcher searcher = new Astar(new MazeManhattanDistance());
 	MazeGenerator mazeGenerator = new MazeGeneratorDFS();
 	
@@ -107,7 +107,7 @@ public class MyModel extends Observable implements Model {
 
 		while (ite.hasNext()){
 		 user2=ite.next();
-		 mazesNames.put(user2.maze, user2.name);
+		 mazesNames.put(user2.name, new Maze(user2.maze));
 		}
 		
 		session.close();
@@ -125,7 +125,7 @@ public class MyModel extends Observable implements Model {
 			public Maze call() throws Exception {
 				m= new Maze(i,j);
 				mazeGenerator.generateMaze(m, 0, 0);
-				mazesNames.put(m.toString(), name);
+				mazesNames.put(name , m);
 				return m;
 			}
 			
@@ -154,14 +154,14 @@ public class MyModel extends Observable implements Model {
 	 * @param m - the Maze we want to solve.
 	 */
 	@Override
-	public void solveMaze(Maze m) {
+	public void solveMaze(String name) {
 		
-		if(!hm.containsKey(m.toString())){
+		if(!hm.containsKey(name)){
 			Future<Solution> f = executor.submit(new Callable<Solution>() {
 				@Override
 				public Solution call() throws Exception {
-					sol = searcher.search(new SearchableMaze(m, false));
-					hm.put(mazesNames.get(m.toString()), sol);
+					sol = searcher.search(new SearchableMaze(mazesNames.get(name), false));
+					hm.put(name, sol);
 					return sol;
 				}
 				
@@ -199,9 +199,10 @@ public class MyModel extends Observable implements Model {
 		
 		//creates a set which contains all the HashMap data.
 		Set<String> mazes = hm.keySet();
-		Set<String> mazeSet = mazesNames.keySet();
+		Set<String> nameSet = mazesNames.keySet();
 		LinkedList<MazeNames> names = new LinkedList<MazeNames>();
 		LinkedList<MazeData> data = new LinkedList<MazeData>();
+		HashMap<String,String> getMazeName = new HashMap<String, String>();
 		Iterator<String> ite = mazes.iterator();
 		
 		while(ite.hasNext()){
@@ -211,11 +212,12 @@ public class MyModel extends Observable implements Model {
 			data.add(md);
 		}
 		
-		ite = mazeSet.iterator();
+		ite = nameSet.iterator();
 		while(ite.hasNext()){
-			String maze = ite.next();
-			String name = mazesNames.get(maze);
+			String name = ite.next();
+			String maze = mazesNames.get(name).toString();
 			MazeNames mn = new MazeNames(name,maze);
+			getMazeName.put(maze, name);
 			names.add(mn);
 		}
 		

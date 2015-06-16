@@ -28,9 +28,9 @@ public class Test {
 		Maze maze2 = Model.getMaze();
 		System.out.println();
 		System.out.println();
-		Model.solveMaze(maze);
+		Model.solveMaze("momo");
 		Solution sol = Model.getSolution();
-		Model.solveMaze(maze2);
+		Model.solveMaze("mimo");
 		Solution sol2 = Model.getSolution();
 		System.out.println(maze.toString() + System.lineSeparator() + sol.toString());
 		System.out.println(maze2.toString() + System.lineSeparator() + sol2.toString());

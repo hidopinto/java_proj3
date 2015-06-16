@@ -208,7 +208,7 @@ public class Presenter implements Observer{
 
 		@Override
 		public void doCommand(String s) {
-			m.solveMaze(mazes.get(s));
+			m.solveMaze(s);
 		}	
 	}
 	
