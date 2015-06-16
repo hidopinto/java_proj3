@@ -4,7 +4,6 @@ import java.util.LinkedList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 
 
 public abstract class CommonGameBoard extends Composite implements GameBoard {

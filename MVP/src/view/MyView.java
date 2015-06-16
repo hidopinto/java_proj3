@@ -71,6 +71,7 @@ public class MyView extends CommonView {
 		//this.notifyObservers();
 	}
 
+	
 	/**
 	 * just like Observable.setChanged, but public.
 	 */
@@ -78,7 +79,6 @@ public class MyView extends CommonView {
 	{
 		this.setChanged();
 	}
-	
 
 
 }

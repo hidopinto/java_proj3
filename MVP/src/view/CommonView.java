@@ -13,6 +13,6 @@ public abstract class CommonView extends Observable implements View{
 	/**
 	 * just like Observable.setChanged, but public.
 	 */
-	public abstract void setChanged1 ();
+	public void setChanged1 (){}
 	
 }

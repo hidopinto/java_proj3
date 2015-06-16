@@ -1,26 +1,27 @@
 package boot;
 
 
-import org.eclipse.swt.SWT;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
-
-
-
-
-import GUI.CommonDisplayer;
-import GUI.CommonGameBoard;
-import GUI.Displayer;
-import GUI.GameBoard;
+import model.MyModel;
+import presenter.Presenter;
+import presenter.Properties;
+import view.MyView;
+import view.RunnabelCLI;
+import algorithms.mazeGenerators.MazeGeneratorDFS;
+import algorithms.search.BFS;
 /*import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;*/
-import GUI.ImgGameBoard;
-import GUI.ImgMazeDisplayer;
-import GUI.MazeWindow;
-import algorithms.mazeGenerators.Maze;
-import algorithms.mazeGenerators.MazeGeneratorDFS;
 
 
 public class Run {
@@ -33,7 +34,7 @@ public class Run {
 		 * adir ben avi id-318509627
 		 * 
 		*/
-		/*XMLEncoder encoder;
+		XMLEncoder encoder;
 				try {
 					encoder = new XMLEncoder(new FileOutputStream("properties.xml"));
 					Properties properties = new Properties(3,new BFS(),new MazeGeneratorDFS());
@@ -61,17 +62,9 @@ public class Run {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		PrintWriter writer = new PrintWriter(System.out);
 		RunnabelCLI cli=new RunnabelCLI(reader, writer,v);
-		cli.start();*/
+		cli.start();
 		
-		/*int w='w';
-		int a='a';
-		int s='s';
-		int d='d';
-		System.out.println("w = " + w);
-		System.out.println("a = " + a);
-		System.out.println("s = " + s);
-		System.out.println("d = " + d);
-		*/
+		/*
 		MazeGeneratorDFS mg = new MazeGeneratorDFS();
 		Maze m = new Maze(8,8);
 		mg.generateMaze(m, 0, 0);
@@ -84,7 +77,7 @@ public class Run {
 		md.setBoard(board);
 		
 		mw.setGameBoard(board);
-		mw.run();
+		mw.run();*/
 	}
 
 }

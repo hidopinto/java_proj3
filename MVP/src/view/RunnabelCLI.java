@@ -120,10 +120,10 @@ public class RunnabelCLI implements Runnable{
 			try {
 				in.close();
 				out.close();
-			} catch (IOException e) {				
+			} catch (IOException e) {
 				e.printStackTrace();
-			}			
-		}		
+			}
+		}
 	}
 
 }

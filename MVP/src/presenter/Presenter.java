@@ -45,7 +45,8 @@ public class Presenter implements Observer{
 			String[] parameters=((String) arg1).split(",");
 			CommonView mv=(CommonView) arg0;
 			Command c=(Command) commands.get(parameters[0]);
-			c.doCommand(parameters[1]);
+			if(parameters.length >1)
+				c.doCommand(parameters[1]);
 		}
 		if( arg0==m)
 		{

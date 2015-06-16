@@ -1,6 +1,5 @@
 package boot;
 
-import static org.junit.Assert.*;
 
 import java.util.Random;
 
