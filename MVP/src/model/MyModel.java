@@ -137,7 +137,7 @@ public class MyModel extends Observable implements Model {
 		}
 		
 		this.setChanged();
-		this.notifyObservers();
+		this.notifyObservers("maze");
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class MyModel extends Observable implements Model {
 				@Override
 				public Solution call() throws Exception {
 					sol = searcher.search(new SearchableMaze(m, false));
-					hm.put(m.toString(), sol);
+					hm.put(mazesNames.get(m.toString()), sol);
 					return sol;
 				}
 				
@@ -176,7 +176,7 @@ public class MyModel extends Observable implements Model {
 			sol = hm.get(m);
 
 		this.setChanged();
-		this.notifyObservers();
+		this.notifyObservers("solution");
 	}
 	
 	/**

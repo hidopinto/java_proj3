@@ -19,6 +19,7 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import view.CommonView;
 import view.View;
 import algorithms.mazeGenerators.Maze;
+import algorithms.search.Solution;
 
 /**
  * a presenter class, from the mvp framework. connects between the model and the view.
@@ -51,8 +52,14 @@ public class Presenter implements Observer{
 		if( arg0==m)
 		{
 			MyModel mm=(MyModel) arg0;
-			Maze maze=mm.getMaze();
-			v.displayMaze(maze);
+			if(arg1.equals("maze")){
+				Maze maze=mm.getMaze();
+				v.displayMaze(maze);
+			}
+			else{
+				Solution sol = mm.getSolution();
+				v.displaySolution(sol);
+			}
 		}
 	}
 
@@ -135,6 +142,8 @@ public class Presenter implements Observer{
 		@Override
 		public void doCommand(String s) {
 			String[] parameters=s.split(":");
+			if(mazes.containsKey(parameters[0]))
+				return;
 			m.generateMaze(Integer.parseInt(parameters[2]),Integer.parseInt(parameters[1]),parameters[0]);
 			Maze maze=m.getMaze();
 			mazes.put(parameters[0], maze);
@@ -200,8 +209,6 @@ public class Presenter implements Observer{
 		@Override
 		public void doCommand(String s) {
 			m.solveMaze(mazes.get(s));
-			System.out.println("solution for "+s+" is ready");
-			
 		}	
 	}
 	

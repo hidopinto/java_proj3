@@ -60,7 +60,6 @@ public class RunnabelCLI implements Runnable{
 	public void start()
 	{
 		Scanner uin = new Scanner(System.in);
-		int cols=0,rows=0;
 		String name=new String();
 		System.out.print("Enter command: ");
 		try {
@@ -82,10 +81,16 @@ public class RunnabelCLI implements Runnable{
 				if(command!=null){
 					if(commandName.equals("GenerateMaze"))
 					{
-						
+						int cols=0,rows=0;
 						System.out.println("enter num of cols and num of rows");
-						cols=uin.nextInt();
-						rows=uin.nextInt();
+						do{
+							if(uin.hasNextInt())
+								cols=uin.nextInt();
+						}while(cols==0);
+						do{
+							if(uin.hasNextInt())
+								rows=uin.nextInt();
+						}while(rows==0);
 						System.out.println("enter name of maze");
 						//do{
 						name=uin.next();
@@ -99,7 +104,7 @@ public class RunnabelCLI implements Runnable{
 						System.out.println("enter name of maze");
 						name=uin.nextLine();
 						v.setChanged1();
-						v.notifyObservers(commandName+":"+ name);
+						v.notifyObservers(commandName+","+ name);
 					}
 					
 					
@@ -116,13 +121,12 @@ public class RunnabelCLI implements Runnable{
 						
 		} catch (IOException e) {			
 			e.printStackTrace();
-		} finally {
-			try {
-				in.close();
-				out.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		}
+		try {
+			in.close();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
