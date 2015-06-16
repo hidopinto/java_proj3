@@ -55,8 +55,6 @@ public class MyView extends CommonView {
 	public void displayMaze(Maze m) {
 		System.out.println("displaying maze");
 		System.out.println(m.toString());
-		//this.setChanged();
-		//this.notifyObservers();
 	}
 
 	/**
@@ -67,8 +65,6 @@ public class MyView extends CommonView {
 	public void displaySolution(Solution s) {
 		System.out.println("displaying solution");
 		System.out.println(s.toString());
-		//this.setChanged();
-		//this.notifyObservers();
 	}
 
 	
