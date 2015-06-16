@@ -57,6 +57,30 @@ public class MazeWindow extends BasicWindow implements View{
 	 */
 	@Override
 	void initWidgets() {
+		
+		//MazeGeneratorDFS mg = new MazeGeneratorDFS();
+				Maze m = new Maze(8,8);
+				
+				md = new ImgMazeDisplayer(m, null);
+				
+				Button generateMaze = new Button(shell, SWT.PUSH);
+				generateMaze.setText("Generate The Maze!");
+				generateMaze.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+				generateMaze.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						displayMaze(m);
+				
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						
+					}
+				});
+		
+		
 		shell.setLayout(new GridLayout(2, false));
 		
 		//Text txt = new Text(shell, SWT.BORDER);

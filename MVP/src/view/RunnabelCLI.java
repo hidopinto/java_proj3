@@ -3,6 +3,7 @@ package view;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Scanner;
 
 /**
  * a class made by object adapter, forming a runnable CLI class, for using threads.
@@ -58,10 +59,16 @@ public class RunnabelCLI implements Runnable{
 	 */
 	public void start()
 	{
+		Scanner uin = new Scanner(System.in);
+		int cols=0,rows=0;
+		String name=new String();
 		System.out.print("Enter command: ");
 		try {
 			String line = in.readLine();
-			
+			if(line=="GenerateMaze")
+			{
+				
+			}
 			while (!line.equals("exit"))
 			{
 				String[] sp = line.split(" ");
@@ -73,8 +80,32 @@ public class RunnabelCLI implements Runnable{
 				
 				presenter.Presenter.Command command =  (presenter.Presenter.Command) v.getUserCommand(commandName);
 				if(command!=null){
+					if(commandName.equals("GenerateMaze"))
+					{
+						
+						System.out.println("enter num of cols and num of rows");
+						cols=uin.nextInt();
+						rows=uin.nextInt();
+						System.out.println("enter name of maze");
+						//do{
+						name=uin.next();
+						v.setChanged1();
+						v.notifyObservers(command+","+ name +":" + cols +":"+ rows);
+					}
+					
+					if(commandName.equals("SolveMaze"))
+					{
+						
+						System.out.println("enter name of maze");
+						name=uin.nextLine();
+						v.setChanged1();
+						v.notifyObservers(command+":"+ name);
+					}
+					
+					
 					v.setChanged1();
 					v.notifyObservers(command);
+					
 				}
 				System.out.print("Enter command: ");
 				line = in.readLine();
@@ -92,7 +123,7 @@ public class RunnabelCLI implements Runnable{
 			} catch (IOException e) {				
 				e.printStackTrace();
 			}			
-		}	
+		}		
 	}
 
 }

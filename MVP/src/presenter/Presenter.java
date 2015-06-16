@@ -42,9 +42,10 @@ public class Presenter implements Observer{
 	public void update(Observable arg0, Object arg1) {
 		if(arg0==v)
 		{
+			String[] parameters=((String) arg1).split(",");
 			CommonView mv=(CommonView) arg0;
-			Command c=(Command) arg1;
-			c.doCommand();
+			Command c=(Command) commands.get(parameters[0]);
+			c.doCommand(parameters[1]);
 		}
 		if( arg0==m)
 		{
@@ -95,6 +96,7 @@ public class Presenter implements Observer{
 	
 	public interface Command{
 		public void doCommand();
+		public void doCommand(String s);
 	}
 	/**
 	 * a command type class, for the generate maze method
@@ -109,7 +111,7 @@ public class Presenter implements Observer{
 		 */
 		@Override
 		public void doCommand() {
-			Scanner in = new Scanner(System.in);
+			/*Scanner in = new Scanner(System.in);
 			int cols=0,rows=0;
 			String name=new String();
 			System.out.println("enter num of cols and num of rows");
@@ -126,7 +128,16 @@ public class Presenter implements Observer{
 			m.generateMaze(rows,cols,name);
 			Maze maze=m.getMaze();
 			mazes.put(name, maze);
-			System.out.println("maze "+name+" is ready");
+			System.out.println("maze "+name+" is ready");*/
+		}
+
+		@Override
+		public void doCommand(String s) {
+			String[] parameters=s.split(":");
+			m.generateMaze(Integer.parseInt(parameters[2]),Integer.parseInt(parameters[1]),parameters[0]);
+			Maze maze=m.getMaze();
+			mazes.put(parameters[0], maze);
+			System.out.println("maze "+parameters[0]+" is ready");
 		}		
 	}
 	
@@ -151,6 +162,12 @@ public class Presenter implements Observer{
 					v.displayMaze(mazes.get(name));
 			else
 				System.out.println("maze does not exist");
+		}
+
+		@Override
+		public void doCommand(String s) {
+			// TODO Auto-generated method stub
+			
 		}		
 	}
 	
@@ -167,7 +184,7 @@ public class Presenter implements Observer{
 		 */
 		@Override
 		public void doCommand() {
-			Scanner in = new Scanner(System.in);
+			/*Scanner in = new Scanner(System.in);
 			String name=new String();
 			System.out.println("enter name of maze");
 			name=in.nextLine();
@@ -176,8 +193,15 @@ public class Presenter implements Observer{
 				return;
 			}
 			m.solveMaze(mazes.get(name));
-			System.out.println("solution for "+name+" is ready");
-		}		
+			System.out.println("solution for "+name+" is ready");*/
+		}
+
+		@Override
+		public void doCommand(String s) {
+			m.solveMaze(mazes.get(s));
+			System.out.println("solution for "+s+" is ready");
+			
+		}	
 	}
 	
 	/**
@@ -204,6 +228,12 @@ public class Presenter implements Observer{
 			//m.solveMaze(mazes.get(name));
 			v.displaySolution(m.getSolution());
 			
+		}
+
+		@Override
+		public void doCommand(String s) {
+			// TODO Auto-generated method stub
+			
 		}		
 	}
 	
@@ -216,6 +246,12 @@ public class Presenter implements Observer{
 		@Override
 		public void doCommand() {
 			m.stop();
+		}
+
+		@Override
+		public void doCommand(String s) {
+			// TODO Auto-generated method stub
+			
 		}
 		
 	}
